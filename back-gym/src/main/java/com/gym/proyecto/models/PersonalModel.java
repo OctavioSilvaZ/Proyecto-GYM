@@ -54,13 +54,17 @@ public class PersonalModel {
     @JoinColumn(name="horario")
     private HorarioModel horario;
 
+    @ManyToOne
+    @JoinColumn(name="jornada_id")
+    private JornadaModel jornada;
+
     public PersonalModel(){
         super();
     }
 
     public PersonalModel(String nombre,String apePaterno,String apeMaterno,String direccion,
     String telefono,String correo,String password,String foto,String ine, Date fecha_registro,
-    EstadoPersonalModel estado, HorarioModel horario){
+    EstadoPersonalModel estado, HorarioModel horario, JornadaModel jornada){
         super();
         this.nombre=nombre;
         this.apePaterno=apePaterno;
@@ -74,6 +78,7 @@ public class PersonalModel {
         this.fecha_registro=fecha_registro;
         this.estado=estado;
         this.horario=horario;
+        this.jornada = jornada;
     }
 
 }

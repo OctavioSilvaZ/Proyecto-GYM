@@ -11,7 +11,6 @@ public class ResponseJson {
   public static ResponseEntity<Object> generateResponse(HttpStatus status, String mensaje) {
     Map<String, Object> map = new HashMap<>();
         try {
-            map.put("status", status.value());//Muestra el del estado http
             map.put("mensaje", mensaje); //Muestra el mensaje
             return new ResponseEntity<Object>(map, status);
 
@@ -26,7 +25,6 @@ public class ResponseJson {
     public static ResponseEntity<Object> generateResponseObject(HttpStatus status, Object data) {
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("status", status.value()); // Código de estado HTTP
             map.put("data", data); // El objeto que se pasa como respuesta
             return new ResponseEntity<>(map, status);
         } catch (Exception e) {

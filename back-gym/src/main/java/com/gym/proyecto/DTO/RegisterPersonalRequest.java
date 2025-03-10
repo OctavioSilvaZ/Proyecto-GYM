@@ -12,4 +12,5 @@ public class RegisterPersonalRequest {
     private String password;
     private int estado;
     private int horario;
+    private int jornada;
 }
