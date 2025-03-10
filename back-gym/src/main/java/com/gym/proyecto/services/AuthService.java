@@ -1,13 +1,8 @@
 package com.gym.proyecto.services;
-
-import java.sql.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gym.proyecto.DTO.AuthResponse;
-import com.gym.proyecto.DTO.LoginRequest;
-import com.gym.proyecto.DTO.RegisterPersonalRequest;
 import com.gym.proyecto.JWT.JwtService;
 import com.gym.proyecto.models.PersonalModel;
 import com.gym.proyecto.models.RolPersonalModel;

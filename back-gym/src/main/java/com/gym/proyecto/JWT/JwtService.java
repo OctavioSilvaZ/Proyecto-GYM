@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.gym.proyecto.models.PersonalModel;
-import com.gym.proyecto.models.UsuariosModel;
 import com.gym.proyecto.services.VariableGlobalService;
 
 import io.jsonwebtoken.Claims;
