@@ -20,9 +20,19 @@ public class RolPersonalModel {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    private PersonalModel userId;
+    private PersonalModel personal;
 
     @ManyToOne
     @JoinColumn(name="rol_id")
-    private RolesModel rol;
+    private RolesModel rolId;
+
+    public RolPersonalModel(){
+        super();
+    }
+
+    public RolPersonalModel(PersonalModel personal, RolesModel rol){
+        super();
+        this.personal=personal;
+        this.rolId=rol;
+    }
 }

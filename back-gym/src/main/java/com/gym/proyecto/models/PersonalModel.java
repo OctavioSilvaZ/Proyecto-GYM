@@ -11,12 +11,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Data
-@AllArgsConstructor
 @Table(name="personal")
 public class PersonalModel {
 
@@ -31,18 +30,15 @@ public class PersonalModel {
     private String apeMaterno;
     @NotEmpty(message = "Esta vacio")
     private String direccion;
-    @NotEmpty(message = "Esta vacio")
-    private long telefono;
+    @NotNull
+    private String telefono;
     @NotEmpty(message = "Esta vacio")
     @Email(message = "Es invalido")
     private String correo;
     @NotEmpty(message = "Esta vacio")
     private String password;
-    @NotEmpty(message = "Esta vacio")
     private String foto;
-    @NotEmpty(message = "Esta vacio")
     private String ine;
-    @NotEmpty(message = "Esta vacio")
     private Date fecha_registro;
     private Integer horas_faltantes;
     private Integer horas_extra;
@@ -57,4 +53,27 @@ public class PersonalModel {
     @ManyToOne
     @JoinColumn(name="horario")
     private HorarioModel horario;
+
+    public PersonalModel(){
+        super();
+    }
+
+    public PersonalModel(String nombre,String apePaterno,String apeMaterno,String direccion,
+    String telefono,String correo,String password,String foto,String ine, Date fecha_registro,
+    EstadoPersonalModel estado, HorarioModel horario){
+        super();
+        this.nombre=nombre;
+        this.apePaterno=apePaterno;
+        this.apeMaterno=apeMaterno;
+        this.direccion=direccion;
+        this.telefono=telefono;
+        this.correo=correo;
+        this.password=password;
+        this.foto=foto;
+        this.ine=ine;
+        this.fecha_registro=fecha_registro;
+        this.estado=estado;
+        this.horario=horario;
+    }
+
 }
