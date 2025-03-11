@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request ) {
 
         PersonalModel personal = this.personalService.buscarPorCorreo(request.getCorreo());
 
@@ -53,7 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/registro/personal")
-    public ResponseEntity<?> registroPersonal(@Valid @RequestBody RegisterPersonalRequest request) {
+    public ResponseEntity<?> registroPersonal(@Valid @RequestBody RegisterPersonalRequest request,  BindingResult result) {
 
         return this.authService.registrarPersonal(request);
     }

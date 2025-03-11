@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Entity
@@ -15,6 +16,7 @@ public class EstadoPersonalModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotEmpty(message = "Error en el estado")
     private String nombre;    
 
 }

@@ -48,14 +48,17 @@ public class PersonalModel {
 
     @ManyToOne
     @JoinColumn(name="estado")
+    @NotNull
     private EstadoPersonalModel estado;
 
     @ManyToOne
     @JoinColumn(name="horario")
+    @NotNull
     private HorarioModel horario;
 
     @ManyToOne
     @JoinColumn(name="jornada_id")
+    @NotNull
     private JornadaModel jornada;
 
     public PersonalModel(){

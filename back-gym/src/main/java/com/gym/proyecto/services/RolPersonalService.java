@@ -19,35 +19,39 @@ public class RolPersonalService {
     @Autowired
     private RolesService rolesService;
 
-    public List<RolPersonalModel> listar(){
+    public List<RolPersonalModel> listar() {
         return this.repository.findAll();
     }
 
-    public RolPersonalModel buscarId(Long id){
+    public RolPersonalModel buscarId(Long id) {
         return this.repository.findById(id).orElse(null);
     }
 
-    public RolPersonalModel buscarPersonalId(Long id){
+    public RolPersonalModel buscarPersonalId(Long id) {
         return this.repository.findByPersonal_Id(id);
     }
 
-    public void guardar(PersonalModel personal,Integer rol){
-        //Busca el rol por el id
-        RolesModel rolFind =this.rolesService.buscarPorId(rol);
+    public void guardar(PersonalModel personal, Integer rol) {
+        // Busca el rol por el id
+        RolesModel rolFind = this.rolesService.buscarPorId(rol);
+        RolPersonalModel rol_persona = this.buscarPersonalId(personal.getId());
 
-        if(rolFind!=null){
-        // Crea el rol con id del rol y del personal
-        RolPersonalModel rolPersona = new RolPersonalModel(personal, rolFind);
-        this.repository.save(rolPersona);
-        }
-        else{
+        if (rolFind != null) {
+            if (rol_persona != null) {
+                // Crea el rol con id del rol y del personal
+                rol_persona.setRolId(rolFind);
+                this.repository.save(rol_persona);
+            } else {
+                RolPersonalModel rolPersona = new RolPersonalModel(personal, rolFind);
+                this.repository.save(rolPersona);
+            }
+        } else {
             throw new RuntimeException("Rol no encontrado");
         }
     }
 
-    public void eliminarId(Long id){
-        this.repository.deleteById(id);
+    public void eliminarPorPersonalId(Long personalId) {
+        this.repository.deleteByPersonal_Id(personalId);
     }
-
 
 }
