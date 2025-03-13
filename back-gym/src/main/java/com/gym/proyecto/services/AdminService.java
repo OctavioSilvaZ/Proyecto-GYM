@@ -19,10 +19,10 @@ public class AdminService {
     @Autowired
     private RolPersonalService rolPersonalService;
 
-    @Autowired 
+    @Autowired
     private PersonalService personalService;
 
-   @Autowired
+    @Autowired
     private EstadoPersonalService estadoPersonalService;
 
     @Autowired
@@ -34,55 +34,59 @@ public class AdminService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    public PersonalDatosResponse personalFound(PersonalModel personal) {
 
-    public PersonalDatosResponse personalFound(PersonalModel personal){
+        PersonalDatosResponse personalResponse = new PersonalDatosResponse(personal.getId(), personal.getNombre(),
+                personal.getApePaterno(), personal.getApeMaterno(),
+                personal.getDireccion(), personal.getTelefono(), personal.getCorreo(),
+                personal.getEstado().getNombre(), personal.getIne(),
+                personal.getHorario().getTipo(), personal.getJornada().getTipo(), personal.getHoras_faltantes(),
+                personal.getHoras_extra(), personal.getDias_faltantes(), personal.getBono(), personal.getNoCuenta(),
+                personal.getFecha_pago());
 
-        PersonalDatosResponse personalResponse= new PersonalDatosResponse(personal.getId(), personal.getNombre(), personal.getApePaterno(), personal.getApeMaterno(),
-        personal.getDireccion(), personal.getTelefono(), personal.getCorreo(),personal.getEstado().getNombre(), personal.getIne(),
-        personal.getHorario().getTipo(),personal.getJornada().getTipo(), personal.getHoras_faltantes(),
-        personal.getHoras_extra(),personal.getDias_faltantes(), personal.getBono(), personal.getNoCuenta());
-    
         return personalResponse;
     }
 
-    public List<PersonalListResponse> personalAll(List<PersonalModel> personal){
+    public List<PersonalListResponse> personalAll(List<PersonalModel> personal) {
 
-        List<PersonalListResponse>lista = new ArrayList<>();
+        List<PersonalListResponse> lista = new ArrayList<>();
 
-       personal.forEach((datos)->{
-        RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(datos.getId());
-        if(rol.getId()!=1){
-        lista.add(new PersonalListResponse(datos.getId(), datos.getNombre(), datos.getApePaterno(),
-         datos.getApeMaterno(), datos.getEstado().getNombre()));
-        }
-       });
+        personal.forEach((datos) -> {
+            RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(datos.getId());
+            if (rol.getId() != 1) {
+                lista.add(new PersonalListResponse(datos.getId(), datos.getNombre(), datos.getApePaterno(),
+                        datos.getApeMaterno(), datos.getEstado().getNombre(), datos.getHorario().getTipo(),
+                        datos.getJornada().getTipo(), datos.getFecha_pago()));
+            }
+        });
 
-       return lista;
+        return lista;
     }
 
-    public PersonalModel personalUpdate(RegisterPersonalRequest request, long id){
+    public PersonalModel personalUpdate(RegisterPersonalRequest request, long id) {
         PersonalModel personal = this.personalService.buscarPorId(id);
 
-        if(personal!=null){
-        personal.setNombre(request.getNombre());
-        personal.setApePaterno(request.getApePaterno());
-        personal.setApeMaterno(request.getApeMaterno());
-        personal.setDireccion(request.getDireccion());
-        personal.setTelefono(request.getTelefono());
-        personal.setCorreo(request.getCorreo());
-        personal.setPassword(this.passwordEncoder.encode(request.getPassword()));
-        personal.setEstado(this.estadoPersonalService.buscarId(request.getEstado()));
-        personal.setHorario(this.horarioService.buscarId(request.getHorario()));
-        personal.setJornada(this.jornadaService.buscarId(request.getJornada()));
-        personal.setHoras_faltantes(request.getHorasExtra());
-        personal.setHoras_extra(request.getHorasExtra());
-        personal.setBono(request.getBono());
-        personal.setNoCuenta(request.getNoCuenta());
+        if (personal != null) {
+            personal.setNombre(request.getNombre());
+            personal.setApePaterno(request.getApePaterno());
+            personal.setApeMaterno(request.getApeMaterno());
+            personal.setDireccion(request.getDireccion());
+            personal.setTelefono(request.getTelefono());
+            personal.setCorreo(request.getCorreo());
+            personal.setPassword(this.passwordEncoder.encode(request.getPassword()));
+            personal.setEstado(this.estadoPersonalService.buscarId(request.getEstado()));
+            personal.setHorario(this.horarioService.buscarId(request.getHorario()));
+            personal.setJornada(this.jornadaService.buscarId(request.getJornada()));
+            personal.setHoras_faltantes(request.getHorasFaltantes());
+            personal.setHoras_extra(request.getHorasExtra());
+            personal.setDias_faltantes(request.getDiasFaltantes());
+            personal.setBono(request.getBono());
+            personal.setNoCuenta(request.getNoCuenta());
 
-        this.personalService.guardar(personal, 2);
-       return personal;
-        }else{
+            this.personalService.guardar(personal, 2);
+            return personal;
+        } else {
             return null;
         }
-     }
+    }
 }

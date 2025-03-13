@@ -1,5 +1,7 @@
 package com.gym.proyecto.DTO;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,7 +10,7 @@ import lombok.Data;
 public class PersonalDatosResponse {
     private Long id;
     private String nombre;
-    private String apeParterno;
+    private String apePaterno;
     private String apeMaterno;
     private String direccion;
     private String telefono;
@@ -22,4 +24,5 @@ public class PersonalDatosResponse {
     private Integer dias_Faltantes;
     private Integer bono;
     private Integer noCuenta;
+    private LocalDate fecha_pago;
 }

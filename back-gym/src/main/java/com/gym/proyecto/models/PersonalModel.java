@@ -1,6 +1,6 @@
 package com.gym.proyecto.models;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,11 +16,11 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="personal")
+@Table(name = "personal")
 public class PersonalModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotEmpty(message = "Esta vacio")
     private String nombre;
@@ -39,49 +39,51 @@ public class PersonalModel {
     private String password;
     private String foto;
     private String ine;
-    private Date fecha_registro;
+    private LocalDate fecha_registro;
     private Integer horas_faltantes;
     private Integer horas_extra;
     private Integer dias_faltantes;
     private Integer bono;
     private Integer noCuenta;
+    private LocalDate fecha_pago;
 
     @ManyToOne
-    @JoinColumn(name="estado")
+    @JoinColumn(name = "estado")
     @NotNull
     private EstadoPersonalModel estado;
 
     @ManyToOne
-    @JoinColumn(name="horario")
+    @JoinColumn(name = "horario")
     @NotNull
     private HorarioModel horario;
 
     @ManyToOne
-    @JoinColumn(name="jornada_id")
+    @JoinColumn(name = "jornada_id")
     @NotNull
     private JornadaModel jornada;
 
-    public PersonalModel(){
+    public PersonalModel() {
         super();
     }
 
-    public PersonalModel(String nombre,String apePaterno,String apeMaterno,String direccion,
-    String telefono,String correo,String password,String foto,String ine, Date fecha_registro,
-    EstadoPersonalModel estado, HorarioModel horario, JornadaModel jornada){
+    public PersonalModel(String nombre, String apePaterno, String apeMaterno, String direccion,
+            String telefono, String correo, String password, String foto, String ine, LocalDate fecha_registro,
+            EstadoPersonalModel estado, HorarioModel horario, JornadaModel jornada, LocalDate fecha_pago) {
         super();
-        this.nombre=nombre;
-        this.apePaterno=apePaterno;
-        this.apeMaterno=apeMaterno;
-        this.direccion=direccion;
-        this.telefono=telefono;
-        this.correo=correo;
-        this.password=password;
-        this.foto=foto;
-        this.ine=ine;
-        this.fecha_registro=fecha_registro;
-        this.estado=estado;
-        this.horario=horario;
+        this.nombre = nombre;
+        this.apePaterno = apePaterno;
+        this.apeMaterno = apeMaterno;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.password = password;
+        this.foto = foto;
+        this.ine = ine;
+        this.fecha_registro = fecha_registro;
+        this.estado = estado;
+        this.horario = horario;
         this.jornada = jornada;
+        this.fecha_pago = fecha_pago;
     }
 
 }

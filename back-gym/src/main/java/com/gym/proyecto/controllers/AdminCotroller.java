@@ -24,7 +24,7 @@ import com.gym.proyecto.utilidades.ResponseJson;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/gym/v1/admin")
+@RequestMapping("gym/v1/admin")
 public class AdminCotroller {
 
     @Autowired
@@ -40,6 +40,9 @@ public class AdminCotroller {
     @GetMapping("/personal")
     public ResponseEntity<?> personalList() {
         List<PersonalModel> personal = this.personalService.listar();
+        if (personal.isEmpty()) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "Ocurrio un error al listar personal");
+        }
         return ResponseEntity.ok(this.adminService.personalAll(personal));
     }
 

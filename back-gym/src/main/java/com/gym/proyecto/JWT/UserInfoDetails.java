@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gym.proyecto.models.PersonalModel;
 
-public class UserInfoDetails implements UserDetails{
+public class UserInfoDetails implements UserDetails {
 
-     private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String name;
     private String password;
     private List<GrantedAuthority> authorities;
@@ -21,8 +21,8 @@ public class UserInfoDetails implements UserDetails{
     public UserInfoDetails(PersonalModel personalInfo) {
         name = personalInfo.getNombre();
         password = personalInfo.getPassword();
-        authorities = Arrays.stream(personalInfo.getNombre().split(",")).map(SimpleGrantedAuthority::new).
-                collect(Collectors.toList());
+        authorities = Arrays.stream(personalInfo.getNombre().split(",")).map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -37,7 +37,6 @@ public class UserInfoDetails implements UserDetails{
 
     @Override
     public String getUsername() {
-        // TODO Auto-generated method stub
         return name;
     }
 

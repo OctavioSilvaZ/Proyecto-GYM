@@ -1,6 +1,6 @@
 package com.gym.proyecto.services;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +69,6 @@ public class AuthService {
             JornadaModel jornada = jornadaService.buscarId(request.getJornada());
 
             if (estado == null || horario == null || jornada == null) {
-                // Crear el mensaje de error dependiendo de qué valor es null
                 String errorMessage = "";
                 if (estado == null) {
                     errorMessage = "El estado no existe";
@@ -80,6 +79,10 @@ public class AuthService {
                 }
                 return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, errorMessage);
             }
+
+            LocalDate fechaActual = LocalDate.now();
+            // Suma 15 días que es el pago quincenal
+            LocalDate fechaPago = fechaActual.plusDays(15);
 
             String nombre = request.getNombre().substring(0, 3); // Primeras 3 letras del nombre
             String apePaterno = request.getApePaterno().substring(0, 4);
@@ -92,8 +95,7 @@ public class AuthService {
                     request.getNombre(), request.getApePaterno(), request.getApeMaterno(),
                     request.getDireccion(), request.getTelefono(), request.getCorreo(),
                     this.passwordEncoder.encode(request.getPassword()), foto, ine,
-                    new Date(System.currentTimeMillis()),
-                    estado,horario,jornada);
+                    fechaActual, estado, horario, jornada, fechaPago);
 
             this.personalService.guardar(nuevoPersonal, 2);
 

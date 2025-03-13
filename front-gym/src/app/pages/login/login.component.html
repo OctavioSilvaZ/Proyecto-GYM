@@ -1,0 +1,96 @@
+<!-- Carousel Start -->
+<div class="container-fluid p-0">
+  <div id="blog-carousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="w-100" src="/assets/img/inicio.png" alt="Image" />
+        <div
+          class="carousel-caption d-flex flex-column align-items-center justify-content-center"
+        >
+          <!-- BMI Calculation Start -->
+          <div class="container align-items-center justify-content-center">
+            <div class="container">
+              <div class="row px-3 align-items-center">
+                <div class="col-md-6">
+                  <div class="pr-md-3 d-none d-md-block">
+                    <h4 class="text-primary">Gymnast</h4>
+                    <h4 class="display-4 text-white font-weight-bold mb-4">
+                      Bienvenido
+                    </h4>
+                    <p class="m-0 text-white">
+                      Vero elitr lorem magna justo magna justo at justo est
+                      ipsum sed clita lorem dolor ipsum sed. Lorem sea lorem
+                      vero. Sanct dolor clita clita rebum kasd magna erat diam
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-6 bg-secondary py-5">
+                  <div class="py-5 px-4">
+                    <h1
+                      class="mb-4 px-0 text-white"
+                      style="margin: -2rem; height: 100px"
+                    >
+                      Inicia Sesión
+                    </h1>
+                    <form
+                      method="post"
+                      name="form"
+                      id="form"
+                      (submit)="enviar()"
+                      #formulario="ngForm"
+                    >
+                      <div class="form-row" style="margin-bottom: 2rem">
+                        <div class="col form-group">
+                          <input
+                            class="form-control form-control-lg bg-dark text-white"
+                            type="email"
+                            name="email"
+                            [(ngModel)]="usuario.correo"
+                            #correo="ngModel"
+                            placeholder="E-mail"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-row" style="margin-bottom: 2rem">
+                        <div class="col form-group">
+                          <input
+                            class="form-control form-control-lg bg-dark text-white"
+                            type="password"
+                            name="password"
+                            [(ngModel)]="usuario.password"
+                            #password="ngModel"
+                            placeholder="Password"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col">
+                          <button
+                            type="submit"
+                            class="btn btn-lg btn-block btn-dark border-light"
+                            title="Entrar"
+                            id="boton"
+                            [disabled]="!formulario.form.valid"
+                          >
+                            Sign in
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- BMI Calculation End -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Carousel End -->
+
+<!--FOOTER -->
+<app-footer></app-footer>
+
+<!--Body End -->

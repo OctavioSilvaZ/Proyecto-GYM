@@ -1,8 +1,9 @@
 package com.gym.proyecto.DTO;
+
 import lombok.Data;
 
 @Data
-public class  RegisterPersonalRequest {
+public class RegisterPersonalRequest {
     private String nombre;
     private String apePaterno;
     private String apeMaterno;
@@ -15,6 +16,7 @@ public class  RegisterPersonalRequest {
     private int jornada;
     private int horasFaltantes;
     private int horasExtra;
+    private int diasFaltantes;
     private int bono;
     private int noCuenta;
 }

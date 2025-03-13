@@ -31,7 +31,6 @@ import com.gym.proyecto.JWT.UserInfoService;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
@@ -41,21 +40,21 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-
-     @Bean
+    @Bean
     public UserDetailsService userDetailsService() {
         return new UserInfoService();
     }
 
-    //Authentica los usuarios
+    // Authentica los usuarios
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-        @Bean
+    @Bean
     public AuthenticationProvider authenticationProvider() {
-        //se usa para validar usuarios con credenciales almacenadas en la base de datos.
+        // se usa para validar usuarios con credenciales almacenadas en la base de
+        // datos.
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -66,7 +65,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 // Configuración del cors
-                // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // csrf desactivado para hacer request
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -74,15 +73,14 @@ public class SecurityConfiguration {
                         // .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated() // Cualquier otro request se debe autenticar
                 )
-                
-                  .sessionManagement(session ->
-                  session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                  .exceptionHandling(ex -> ex.authenticationEntryPoint(new
-                  // Responde con 401 si no está autenticado
-                  HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                  .authenticationProvider(authenticationProvider())
-                  .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                 
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // Responde con 401
+                                                                                                     // si no está
+                                                                                                     // autenticado
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
