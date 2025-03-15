@@ -1,16 +1,26 @@
 package com.gym.proyecto.services;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gym.proyecto.models.PersonalModel;
 import com.gym.proyecto.repositorys.PersonalRepository;
 
 @Service
 public class PersonalService {
+
+    private static final String FolderFotos = "personalFotos";
+    private static final String FolderIne = "personalIne";
+    private static final String FolderFotosUsers = "usuariosFotos";
 
     @Autowired
     private PersonalRepository repository;
@@ -20,6 +30,32 @@ public class PersonalService {
 
     public List<PersonalModel> listar() {
         return this.repository.findAll();
+    }
+
+    public void guardarIMG(MultipartFile file, int tipo, String nombre) throws IOException {
+        try {
+            // Foto
+            if (tipo == 0) {
+                Path filePath = Paths.get(FolderFotos, nombre);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Ine
+            if (tipo == 1) {
+                Path filePath = Paths.get(FolderIne, nombre);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // Foto de usuarios
+            if (tipo == 3) {
+                Path filePath = Paths.get(FolderFotosUsers, nombre);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            }
+        } catch (IOException e) {
+            throw new IOException("No se pudo guardar la imagen: " + e.getMessage());
+        }
+
     }
 
     public void guardar(PersonalModel personal, Integer rolId) {

@@ -1,5 +1,6 @@
 package com.gym.proyecto.services;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gym.proyecto.DTO.AuthResponse;
 import com.gym.proyecto.DTO.RegisterPersonalRequest;
@@ -56,7 +58,8 @@ public class AuthService {
     }
 
     // Registro del nuevo personal
-    public ResponseEntity<?> registrarPersonal(RegisterPersonalRequest request) {
+    public ResponseEntity<?> registrarPersonal(RegisterPersonalRequest request, MultipartFile fotoImg,
+            MultipartFile ineImg) throws IOException {
 
         PersonalModel personal = this.personalService.buscarPorCorreo(request.getCorreo());
 
@@ -81,6 +84,7 @@ public class AuthService {
             }
 
             LocalDate fechaActual = LocalDate.now();
+
             // Suma 15 días que es el pago quincenal
             LocalDate fechaPago = fechaActual.plusDays(15);
 
@@ -88,8 +92,18 @@ public class AuthService {
             String apePaterno = request.getApePaterno().substring(0, 4);
             String apeMaterno = request.getApeMaterno().substring(0, 4);
 
-            String foto = nombre + "_" + apePaterno + "_" + apeMaterno;
-            String ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine";
+            String foto = null;
+            String ine = null;
+
+            if (!fotoImg.isEmpty()) {
+                foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
+                this.personalService.guardarIMG(fotoImg, 0, foto);
+            }
+
+            if (!ineImg.isEmpty()) {
+                ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
+                this.personalService.guardarIMG(ineImg, 1, ine);
+            }
 
             PersonalModel nuevoPersonal = new PersonalModel(
                     request.getNombre(), request.getApePaterno(), request.getApeMaterno(),

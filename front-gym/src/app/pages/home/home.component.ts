@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { HeaderComponent } from "../../componentes/header/header.component";
 import { AuthService } from '../../services/auth.service';
 import { PersonalService } from '../../services/personal.service';
 import swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +15,15 @@ import swal from 'sweetalert2';
 export class HomeComponent implements OnInit {
   personal!: Array<any>;
 
+  @ViewChild("myModalConf", { static: false }) myModalConf!: TemplateRef<any>;
+  modalTitle!: string;
 
-  constructor(private authService: AuthService, private personalService: PersonalService) {
+
+  constructor(private authService: AuthService, private personalService: PersonalService,
+    private modalService: NgbModal) {
     this.authService.methodAuth();
-  }
 
+  }
 
   ngOnInit(): void {
     this.getPersonal();
@@ -27,7 +32,6 @@ export class HomeComponent implements OnInit {
   getPersonal() {
     this.personalService.getListarPersonal(this.authService.getToken()).subscribe({
       next: data => {
-        console.log(data)
         this.personal = data;
       }, error(error) {
         swal.fire({
@@ -37,6 +41,16 @@ export class HomeComponent implements OnInit {
         });
       }
     });
+  }
+
+  registrar() {
+    console.log('Abriendo modal');
+    this.modalService.open(this.myModalConf, {
+      size: 'lg',
+      backdrop: false,  // Elimina el sombreado de fondo
+      keyboard: true     // Permite cerrar el modal con la tecla ESC
+    });
+    this.modalTitle = "Registrar";
   }
 
 }

@@ -1,11 +1,13 @@
 package com.gym.proyecto.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gym.proyecto.DTO.PersonalDatosResponse;
 import com.gym.proyecto.DTO.PersonalListResponse;
@@ -63,8 +65,11 @@ public class AdminService {
         return lista;
     }
 
-    public PersonalModel personalUpdate(RegisterPersonalRequest request, long id) {
+    public PersonalModel personalUpdate(RegisterPersonalRequest request, long id,
+            MultipartFile fotoImg, MultipartFile ineImg) throws IOException {
         PersonalModel personal = this.personalService.buscarPorId(id);
+        String foto = null;
+        String ine = null;
 
         if (personal != null) {
             personal.setNombre(request.getNombre());
@@ -83,6 +88,26 @@ public class AdminService {
             personal.setBono(request.getBono());
             personal.setNoCuenta(request.getNoCuenta());
 
+            String nombre = personal.getNombre().substring(0, 3); // Primeras 3 letras del nombre
+            String apePaterno = personal.getApePaterno().substring(0, 4);
+            String apeMaterno = personal.getApeMaterno().substring(0, 4);
+
+            foto = personal.getFoto();
+            ine = personal.getIne();
+
+            if (foto == null) {
+                foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
+            }
+
+            if (ine == null) {
+                ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
+            }
+
+            personal.setFoto(foto);
+            personal.setIne(ine);
+
+            this.personalService.guardarIMG(fotoImg, 0, foto);
+            this.personalService.guardarIMG(ineImg, 1, ine);
             this.personalService.guardar(personal, 2);
             return personal;
         } else {
