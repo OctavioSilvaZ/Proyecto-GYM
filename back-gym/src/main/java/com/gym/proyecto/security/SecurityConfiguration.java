@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                 // csrf desactivado para hacer request
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/gym/auth/login").permitAll()
+                        .requestMatchers("/gym/auth/**").permitAll()
                         // .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated() // Cualquier otro request se debe autenticar
                 )

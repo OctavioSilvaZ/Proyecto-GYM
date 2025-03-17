@@ -24,7 +24,7 @@ import com.gym.proyecto.utilidades.ResponseJson;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("gym/auth")
+@RequestMapping("gym/")
 public class AuthController {
 
     @Autowired
@@ -39,7 +39,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("login")
+    @PostMapping("auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
         PersonalModel personal = this.personalService.buscarPorCorreo(request.getCorreo());
@@ -57,25 +57,31 @@ public class AuthController {
     }
 
     // Registrar personal
-    @PostMapping("/registro/personal")
+    @PostMapping("admin/registro/personal")
     public ResponseEntity<?> registroPersonal(@Valid RegisterPersonalRequest request,
             @RequestParam(value = "foto", required = false) MultipartFile foto,
             @RequestParam(value = "ine", required = false) MultipartFile ine) throws IOException {
 
-        String fotoTipo = foto.getContentType(); // obtiene los datos de la foto
-        String ineTipo = ine.getContentType(); // Obtiene los datos del ine
+        if (foto != null) {
+            // Obtiene los datos de la foto
+            String fotoTipo = foto.getContentType();
 
-        // verifica que la foto tenga extensión .jpg o .png
-        if (fotoTipo != null && !fotoTipo.equals("image/jpeg")
-                && !fotoTipo.equals("image/png")) {
+            // Verifica que la foto tenga extensión .jpg o .png
+            if (fotoTipo != null && !fotoTipo.equals("image/jpeg")
+                    && !fotoTipo.equals("image/png")) {
 
-            return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
-                    "La foto debe ser de tipo JPG o PNG.");
+                return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
+                        "La foto debe ser de tipo JPG o PNG.");
+            }
         }
 
-        // Verifica que el ine tenga la extension .pdf
-        if (ineTipo != null && !ineTipo.equals("application/pdf")) {
-            return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El INE debe ser de tipo PDF.");
+        if (ine != null) {
+            // Obtiene los datos del ine
+            String ineTipo = ine.getContentType();
+            // Verifica que el ine tenga la extension .pdf
+            if (ineTipo != null && !ineTipo.equals("application/pdf")) {
+                return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El INE debe ser de tipo PDF.");
+            }
         }
 
         return this.authService.registrarPersonal(request, foto, ine);

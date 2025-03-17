@@ -5,8 +5,10 @@ export interface PersonalRequest {
     direccion: string;
     telefono: number;
     correo: string;
-    pasword: string;
+    password: string;
     estado: number;
     horario: number;
     jornada: number;
+    foto: File;
+    ine: File;
 }

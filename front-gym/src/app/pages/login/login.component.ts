@@ -42,13 +42,14 @@ export class LoginComponent {
     this.tokenService.getToken({ correo: this.usuario.correo, password: this.usuario.password })
       .subscribe({
         next: data => {
-          const hours = 1; //tiempo de expiracion del token
-          const expirationInMillis = hours * 60 * 60 * 1000;
-          this.cookieService.set('gym_token', data.token, 1);
-          this.cookieService.set('gym_estado', data.estado, 1);
-          this.cookieService.set('gym_user_id', data.id, 1);
-          this.cookieService.set('gym_rol', data.rol, 1)
-          this.cookieService.set('gym_nombre', data.nombre, 1);
+          const now = new Date();
+          const expireTime = now.getTime() + 60 * 60 * 1000; // 1 hora en ms
+          now.setTime(expireTime);
+          this.cookieService.set('gym_token', data.token, now);
+          this.cookieService.set('gym_estado', data.estado, now);
+          this.cookieService.set('gym_user_id', data.id, now);
+          this.cookieService.set('gym_rol', data.rol, now)
+          this.cookieService.set('gym_nombre', data.nombre, now);
           window.location.href = "/";
 
         }, error(error) {

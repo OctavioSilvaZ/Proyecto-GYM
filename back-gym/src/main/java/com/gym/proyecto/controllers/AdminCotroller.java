@@ -3,8 +3,11 @@ package com.gym.proyecto.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gym.proyecto.DTO.RegisterPersonalRequest;
+import com.gym.proyecto.models.EstadoPersonalModel;
+import com.gym.proyecto.models.HorarioModel;
+import com.gym.proyecto.models.JornadaModel;
 import com.gym.proyecto.models.PersonalModel;
 import com.gym.proyecto.models.RolPersonalModel;
 import com.gym.proyecto.services.AdminService;
+import com.gym.proyecto.services.EstadoPersonalService;
+import com.gym.proyecto.services.HorarioService;
+import com.gym.proyecto.services.JornadaService;
 import com.gym.proyecto.services.PersonalService;
 import com.gym.proyecto.services.RolPersonalService;
 import com.gym.proyecto.utilidades.ResponseJson;
@@ -38,6 +47,15 @@ public class AdminCotroller {
     @Autowired
     private RolPersonalService rolPersonalService;
 
+    @Autowired
+    private EstadoPersonalService estadosPersonalService;
+
+    @Autowired
+    private HorarioService horarioService;
+
+    @Autowired
+    private JornadaService jornadaService;
+
     // Listar Personal
     @GetMapping("/personal")
     public ResponseEntity<?> personalList() {
@@ -50,7 +68,7 @@ public class AdminCotroller {
 
     // Buscar personal
     @GetMapping("/personal/{id}")
-    public ResponseEntity<?> personalList(@PathVariable("id") Long id) {
+    public ResponseEntity<?> personalFound(@PathVariable("id") Long id) {
         PersonalModel personal = this.personalService.buscarPorId(id);
         if (personal != null) {
             RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(personal.getId());
@@ -117,7 +135,86 @@ public class AdminCotroller {
             this.personalService.eliminarPorID(id);
             return ResponseJson.generateResponse(HttpStatus.OK, "Se elimino correctamente al usuario");
         }
+    }
 
+    // Obtener Foto de Personal
+    @GetMapping("/personal/image/{id}")
+    public ResponseEntity<?> updateImgPersonal(@PathVariable("id") Long id) {
+
+        PersonalModel personal = this.personalService.buscarPorId(id);
+
+        if (personal == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontró al usuario");
+        }
+
+        try {
+            // Ruta
+            // FileSystemResource es para buscar carpetas en la raiz del proyecto o fuera
+            Resource img = new FileSystemResource("personalFotos/" + personal.getFoto());
+
+            if (!img.exists()) {
+                return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "Imagen no encontrada");
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(img);
+
+        } catch (Exception e) {
+            return ResponseJson.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocurrio un error");
+        }
+    }
+
+    // Obtener Estados
+    @GetMapping("/personal/estados")
+
+    public ResponseEntity<?> estadosList() {
+        List<EstadoPersonalModel> estados = this.estadosPersonalService.listar();
+
+        if (estados == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron los estados");
+        }
+
+        return ResponseEntity.ok(estados);
+    }
+
+    // Buscar Estado
+    @GetMapping("/personal/estados/{id}")
+
+    public ResponseEntity<?> estadosFound(@Valid @PathVariable("id") Integer id) {
+        EstadoPersonalModel estado = this.estadosPersonalService.buscarId(id);
+
+        if (estado == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron los estados");
+        }
+
+        return ResponseEntity.ok(estado);
+    }
+
+    // Obtener horarios
+    @GetMapping("/personal/horarios")
+
+    public ResponseEntity<?> horariosList() {
+        List<HorarioModel> horarios = this.horarioService.listar();
+
+        if (horarios == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron los horarios");
+        }
+
+        return ResponseEntity.ok(horarios);
+    }
+
+    // Obtener jornadas
+    @GetMapping("/personal/jornadas")
+
+    public ResponseEntity<?> jornadasList() {
+        List<JornadaModel> jornadas = this.jornadaService.listar();
+
+        if (jornadas == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron las jornadas de trabajo");
+        }
+
+        return ResponseEntity.ok(jornadas);
     }
 
 }

@@ -3,7 +3,7 @@
 <!-- Carousel Start -->
 <div class="container-fluid p-0">
   <div class="carousel-inner">
-    <img src="/assets/img/carousel-1.jpg" alt="Image" />
+    <img class="w-100" src="/assets/img/carousel-1.jpg" alt="Image" />
     <div class="carousel-caption d-flex flex-column justify-content-center">
       <div class="container">
         <div class="d-flex justify-content-end mb-3">
@@ -83,6 +83,280 @@
         aria-label="Close"
         title="Cerrar"
       ></button>
+    </div>
+    <div class="modal-body">
+      <form name="form" id="form" (submit)="enviar()" #formulario="ngForm">
+        <div class="mb-3">
+          <label for="nombre">Nombre:</label>
+          <input
+            type="text"
+            name="nombre"
+            class="form-control"
+            [(ngModel)]="modelo.nombre"
+            #nombre="ngModel"
+            required="true"
+            placeholder="Nombre"
+          />
+          @if (nombre.invalid && (nombre.dirty || nombre.touched)) {
+          <div class="alert alert-danger">
+            @if (nombre.errors) {
+            <div>El nombre es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="apePaterno">Apellido Paterno:</label>
+          <input
+            type="text"
+            name="apePaterno"
+            class="form-control"
+            [(ngModel)]="modelo.apePaterno"
+            #apePaterno="ngModel"
+            required="true"
+            placeholder="Apellido Paterno"
+          />
+          @if (apePaterno.invalid && (apePaterno.dirty || apePaterno.touched)) {
+          <div class="alert alert-danger">
+            @if (apePaterno.errors) {
+            <div>El Apellido Paterno es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="apeMaterno">Apellido Materno:</label>
+          <input
+            type="text"
+            name="apeMaterno"
+            class="form-control"
+            [(ngModel)]="modelo.apeMaterno"
+            #apeMaterno="ngModel"
+            required="true"
+            placeholder="Apellido Materno"
+          />
+          @if (apeMaterno.invalid && (apeMaterno.dirty || apeMaterno.touched)) {
+          <div class="alert alert-danger">
+            @if (apeMaterno.errors) {
+            <div>El Apellido Materno es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="direccion">Dirección:</label>
+          <input
+            type="text"
+            name="direccion"
+            class="form-control"
+            [(ngModel)]="modelo.direccion"
+            #direccion="ngModel"
+            required="true"
+            placeholder="Dirección"
+          />
+          @if (direccion.invalid && (direccion.dirty || direccion.touched)) {
+          <div class="alert alert-danger">
+            @if (direccion.errors) {
+            <div>La Dirección es obligatoria.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="telefono">Télefono:</label>
+          <input
+            type="number"
+            name="telefono"
+            class="form-control"
+            [(ngModel)]="modelo.telefono"
+            #telefono="ngModel"
+            required="true"
+            placeholder="5X-XX-XX-XX-XX"
+          />
+          @if (telefono.invalid && (telefono.dirty || telefono.touched)) {
+          <div class="alert alert-danger">
+            @if (telefono.errors) {
+            <div>El Número de télefono es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="correo">Correo:</label>
+          <input
+            type="email"
+            name="correo"
+            class="form-control"
+            [(ngModel)]="modelo.correo"
+            #correo="ngModel"
+            required="true"
+            placeholder="example@example.com"
+          />
+          @if (correo.invalid && (correo.dirty || correo.touched)) {
+          <div class="alert alert-danger">
+            @if (correo.errors) {
+            <div>El Correo es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            [(ngModel)]="modelo.password"
+            #password="ngModel"
+            required="true"
+            placeholder="Password"
+          />
+          @if (password.invalid && (password.dirty || password.touched)) {
+          <div class="alert alert-danger">
+            @if (password.errors) {
+            <div>La Contraseña es obligatoria.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="passwordConfirm">Confirmar Contraseña:</label>
+          <input
+            type="password"
+            name="passwordConfirm"
+            id="passwordConfirm"
+            class="form-control"
+            [(ngModel)]="passwordConfirm"
+            #passwordConfirmField="ngModel"
+            required
+            placeholder="Confirmar Contraseña"
+          />
+          @if (passwordConfirmField.invalid && (passwordConfirmField.dirty ||
+          passwordConfirmField.touched)) {
+          <div class="alert alert-danger">
+            @if (passwordConfirmField.errors) {
+            <div>Este campo es obligatorio.</div>
+            }
+          </div>
+          } @if (confirmarConstrasenas() && (passwordConfirmField.dirty ||
+          passwordConfirmField.touched)) {
+          <div class="alert alert-danger">Las contraseñas no coinciden.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="estado">Estado</label>
+          <select
+            name="estado"
+            id="estado"
+            class="form-control"
+            [(ngModel)]="modelo.estado"
+            #estado="ngModel"
+            pattern="[1-9]\d*"
+            required="true"
+          >
+            @for (estado of estados; track estado.id) {
+            <option value="{{ estado.id }}">{{ estado.nombre }}</option>
+            }
+          </select>
+          @if (estado.invalid && (estado.dirty || estado.touched)) {
+          <div class="alert alert-danger">
+            @if (estado.errors) {
+            <div>Selecciona un estado.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="jornada">Jornada</label>
+          <select
+            name="jornada"
+            id="jornada"
+            class="form-control"
+            [(ngModel)]="modelo.jornada"
+            #jornada="ngModel"
+            pattern="[1-9]\d*"
+            required="true"
+          >
+            @for (jornada of jornadas; track jornada.id) {
+            <option value="{{ jornada.id }}">{{ jornada.tipo }}</option>
+            }
+          </select>
+          @if (jornada.invalid && (jornada.dirty || jornada.touched)) {
+          <div class="alert alert-danger">
+            @if (jornada.errors) {
+            <div>Selecciona una jornada.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="horario">Horario</label>
+          <select
+            name="horario"
+            id="horario"
+            class="form-control"
+            [(ngModel)]="modelo.horario"
+            #horario="ngModel"
+            pattern="[1-9]\d*"
+            required="true"
+          >
+            @for (horario of horarios; track horario.id) {
+            <option value="{{ horario.id }}">{{ horario.tipo }}</option>
+            }
+          </select>
+          @if (horario.invalid && (horario.dirty || horario.touched)) {
+          <div class="alert alert-danger">
+            @if (horario.errors) {
+            <div>Selecciona un horario.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="foto">Foto:</label>
+          <input
+            type="file"
+            accept="image/*"
+            name="foto"
+            class="form-control"
+            (change)="checkFiles($event, 'foto')"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="ine">INE en PDF:</label>
+          <input
+            type="file"
+            accept=".pdf"
+            name="ine"
+            class="form-control"
+            (change)="checkFiles($event, 'ine')"
+          />
+        </div>
+
+        <div class="mb-3" style="text-align: right">
+          @if(modalTitle=="Registrar"){
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!formulario.form.valid"
+          >
+            <i class="fas fa-arrow-up"></i>Registrar
+          </button>
+          }
+        </div>
+      </form>
     </div>
   </div>
 </ng-template>

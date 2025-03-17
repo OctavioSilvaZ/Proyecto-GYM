@@ -11,12 +11,12 @@ public class RegisterPersonalRequest {
     private String telefono;
     private String correo;
     private String password;
-    private int estado;
-    private int horario;
-    private int jornada;
-    private int horasFaltantes;
-    private int horasExtra;
-    private int diasFaltantes;
-    private int bono;
-    private int noCuenta;
+    private Integer estado;
+    private Integer horario;
+    private Integer jornada;
+    private Integer horasFaltantes;
+    private Integer horasExtra;
+    private Integer diasFaltantes;
+    private Integer bono;
+    private Integer noCuenta;
 }

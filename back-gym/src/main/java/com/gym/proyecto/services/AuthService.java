@@ -18,6 +18,7 @@ import com.gym.proyecto.models.HorarioModel;
 import com.gym.proyecto.models.JornadaModel;
 import com.gym.proyecto.models.PersonalModel;
 import com.gym.proyecto.models.RolPersonalModel;
+import com.gym.proyecto.utilidades.Componentes;
 import com.gym.proyecto.utilidades.ResponseJson;
 
 import lombok.Data;
@@ -66,7 +67,6 @@ public class AuthService {
         if (personal != null) {
             return ResponseJson.generateResponse(HttpStatus.CONFLICT, "El correo ya está registrado");
         } else {
-
             EstadoPersonalModel estado = estadoPersonalService.buscarId(request.getEstado());
             HorarioModel horario = horarioService.buscarId(request.getHorario());
             JornadaModel jornada = jornadaService.buscarId(request.getJornada());
@@ -83,6 +83,11 @@ public class AuthService {
                 return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, errorMessage);
             }
 
+            if (jornada.getId() == 2 && horario.getId() == 2) {
+                return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
+                        "No existe un horario vespertino para el fin de semana");
+            }
+
             LocalDate fechaActual = LocalDate.now();
 
             // Suma 15 días que es el pago quincenal
@@ -92,15 +97,19 @@ public class AuthService {
             String apePaterno = request.getApePaterno().substring(0, 4);
             String apeMaterno = request.getApeMaterno().substring(0, 4);
 
+            nombre = Componentes.normalizarTexto(nombre);
+            apePaterno = Componentes.normalizarTexto(apePaterno);
+            apeMaterno = Componentes.normalizarTexto(apeMaterno);
+
             String foto = null;
             String ine = null;
 
-            if (!fotoImg.isEmpty()) {
+            if (fotoImg != null && !fotoImg.isEmpty()) {
                 foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
                 this.personalService.guardarIMG(fotoImg, 0, foto);
             }
 
-            if (!ineImg.isEmpty()) {
+            if (ineImg != null && !ineImg.isEmpty()) {
                 ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
                 this.personalService.guardarIMG(ineImg, 1, ine);
             }
