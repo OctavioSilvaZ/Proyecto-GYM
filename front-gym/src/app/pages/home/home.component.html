@@ -2,63 +2,69 @@
 
 <!-- Carousel Start -->
 <div class="container-fluid p-0">
-  <div class="carousel-inner">
-    <img class="w-100" src="/assets/img/carousel-1.jpg" alt="Image" />
-    <div class="carousel-caption d-flex flex-column justify-content-center">
-      <div class="container">
-        <div class="d-flex justify-content-end mb-3">
-          <a
-            class="btn btn-light btn-lg px-4 btn-outline-primary"
-            (click)="registrar()"
-          >
-            Registrar
-          </a>
-        </div>
+  <img class="w-100" src="/assets/img/carousel-1.jpg" alt="Image" />
+  <div class="carousel-caption d-flex flex-column justify-content-center">
+    <div class="container">
+      <div class="d-flex justify-content-end mb-3">
+        <a
+          class="btn btn-light btn-lg px-4 btn-outline-primary"
+          (click)="registrar()"
+        >
+          Registrar
+        </a>
+      </div>
 
-        <div class="tab-content">
-          <div id="class-all" class="container tab-pane p-0 active">
-            <div class="table-responsive">
-              <table class="table table-bordered table-lg m-0">
-                <thead class="bg-secondary text-white text-center">
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Horario</th>
-                    <th>Jornada</th>
-                    <th>Estado</th>
-                    <th>Fecha de Pago</th>
-                  </tr>
-                </thead>
-                <tbody class="text-center">
-                  @for (dato of personal; track dato.id) {
-                  <tr>
-                    <th class="align-middle">
-                      <h5>{{ dato.nombre }}</h5>
-                    </th>
-                    <td class="align-middle">
-                      <h5>{{ dato.apePaterno }}</h5>
-                    </td>
-                    <td class="align-middle">
-                      <h5>{{ dato.apeMaterno }}</h5>
-                    </td>
-                    <td class="align-middle">
-                      <h5>{{ dato.horario }}</h5>
-                    </td>
-                    <td class="align-middle">
-                      <h5>{{ dato.jornada }}</h5>
-                    </td>
-                    <td class="align-middle">
-                      <h5>{{ dato.estado }}</h5>
-                    </td>
-                    <td class="bg-secondary text-white align-middle">
-                      {{ dato.fechaPago }}
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
+      <div class="tab-content">
+        <div id="class-all" class="container tab-pane p-0 active">
+          <div class="table-responsive">
+            <table class="table table-bordered table-lg m-0">
+              <thead class="bg-secondary text-white text-center">
+                <tr>
+                  <th>Nombre</th>
+                  <th>Apellido Paterno</th>
+                  <th>Apellido Materno</th>
+                  <th>Horario</th>
+                  <th>Jornada</th>
+                  <th>Estado</th>
+                  <th>Fecha de Pago</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody class="text-center">
+                @for (dato of personal; track dato.id) {
+                <tr>
+                  <th class="align-middle">
+                    <h5>{{ dato.nombre }}</h5>
+                  </th>
+                  <td class="align-middle">
+                    <h5>{{ dato.apePaterno }}</h5>
+                  </td>
+                  <td class="align-middle">
+                    <h5>{{ dato.apeMaterno }}</h5>
+                  </td>
+                  <td class="align-middle">
+                    <h5>{{ dato.horario }}</h5>
+                  </td>
+                  <td class="align-middle">
+                    <h5>{{ dato.jornada }}</h5>
+                  </td>
+                  <td class="align-middle">
+                    <h5>{{ dato.estado }}</h5>
+                  </td>
+                  <td class="bg-secondary text-white align-middle">
+                    {{ dato.fechaPago }}
+                  </td>
+                  <td class="bg-primary text-white align-middle">
+                    <a
+                      [routerLink]="['/personal-info', dato.id]"
+                      class="text-white btn btn-md"
+                      >Editar</a
+                    >
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

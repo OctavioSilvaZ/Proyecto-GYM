@@ -11,7 +11,7 @@ import { ErrorComponent } from './pages/error/error.component';
 export const routes: Routes = [
     { path: "", component: HomeComponent },
     { path: "login", component: LoginComponent },
-    { path: "personal-info", component: PersonalInfoComponent },
+    { path: "personal-info/:id", component: PersonalInfoComponent },
     { path: "usuarios", component: UsuariosComponent },
     { path: "usuarios-info", component: UsuariosInfoComponent },
     { path: "montos", component: MontosComponent },

@@ -75,7 +75,8 @@ public class AdminCotroller {
             if (rol.getRolId().getId() != 1) {
                 return ResponseEntity.ok(this.adminService.personalFound(personal));
             } else {
-                return ResponseJson.generateResponse(HttpStatus.UNAUTHORIZED, "Ocurrio un error inesperado");
+                return ResponseJson.generateResponse(HttpStatus.UNAUTHORIZED,
+                        "No estas autorizado para ver este contenido");
             }
         } else {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontro al personal");

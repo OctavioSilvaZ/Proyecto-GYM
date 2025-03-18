@@ -6,10 +6,11 @@ import { PersonalService } from '../../services/personal.service';
 import swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [FooterComponent, HeaderComponent, FormsModule],
+  imports: [FooterComponent, HeaderComponent, FormsModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

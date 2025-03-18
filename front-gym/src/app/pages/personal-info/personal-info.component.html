@@ -1,1 +1,95 @@
-<p>personal-info works!</p>
+<app-header></app-header>
+
+<div class="container-fluid p-0">
+  <div
+    class="d-flex flex-column justify-content-center"
+    style="background-color: black"
+  >
+    <div
+      class="container"
+      style="
+        background-color: white;
+        margin-top: 100px;
+        padding: 20px;
+        border-radius: 2%;
+      "
+    >
+      <div class="container bg-white mt-2 p-4">
+        <div class="row align-items-center mb-5">
+          <div class="col-md-4 text-center">
+            <img
+              src="assets/img/user2.png"
+              alt="Foto del personal"
+              class="img-fluid ml-4"
+              style="max-width: 350px; width: 100%; height: auto"
+            />
+          </div>
+
+          <!-- Información relevante lado derecho -->
+          <div class="col-md-8 d-flex flex-column justify-content-start">
+            <h2 class="display-4 mt-0 text-center pt-2">
+              {{ personalInfo.nombre }} {{ personalInfo.apePaterno }}
+              {{ personalInfo.apeMaterno }}
+            </h2>
+            <div class="pl-4 ml-2">
+              <p class="mt-5">
+                <strong>Email:</strong> {{ personalInfo.correo }}
+              </p>
+              <p><strong>Password:</strong> ********</p>
+              <p><strong>Estado:</strong> {{ personalInfo.estado }}</p>
+              <p><strong>Horario:</strong> {{ personalInfo.horario }}</p>
+              <p><strong>Jornada:</strong> {{ personalInfo.jornada }}</p>
+              <p><strong>Dirección:</strong> {{ personalInfo.direccion }}</p>
+              <p><strong>Télefono:</strong> {{ personalInfo.telefono }}</p>
+              <a
+                class="btn btn-lg px-4 btn-outline-primary float-end mr-2"
+                (click)="deletePersonal()"
+              >
+                Eliminar
+              </a>
+              <a class="btn btn-lg px-5 btn-outline-dark float-end mr-5">
+                Editar
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 mb-3">
+            <h4>Información adicional</h4>
+          </div>
+
+          <!-- Primera columna -->
+          <div class="col-6 col-md-4 mb-3 pt-3">
+            <p>
+              <strong>Horas faltantes:</strong>
+              {{ personalInfo.horas_Faltantes }}
+            </p>
+            <p><strong>Horas extra:</strong> {{ personalInfo.horas_Extra }}</p>
+          </div>
+
+          <!-- Segunda columna -->
+          <div class="col-6 col-md-4 mb-3 pt-3">
+            <p>
+              <strong>Días faltantes:</strong> {{ personalInfo.dias_Faltantes }}
+            </p>
+            <p><strong>Bono:</strong> {{ personalInfo.bono }}</p>
+          </div>
+
+          <!-- Tercera columna -->
+          <div class="col-6 col-md-4 mb-3 pt-3">
+            @if(personalInfo.ine==null){
+            <p><strong>INE:</strong> Aún no registrado</p>
+            }@else {
+            <p><strong>INE:</strong> Registrado</p>
+            }
+
+            <p><strong>Fecha de pago:</strong> {{ personalInfo.fecha_pago }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
