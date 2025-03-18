@@ -57,7 +57,7 @@ public class AuthController {
     }
 
     // Registrar personal
-    @PostMapping("admin/registro/personal")
+    @PostMapping("v1/admin/registro/personal")
     public ResponseEntity<?> registroPersonal(@Valid RegisterPersonalRequest request,
             @RequestParam(value = "foto", required = false) MultipartFile foto,
             @RequestParam(value = "ine", required = false) MultipartFile ine) throws IOException {

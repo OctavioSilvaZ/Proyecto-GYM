@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gym.proyecto.models.PersonalModel;
+import com.gym.proyecto.models.RolPersonalModel;
 import com.gym.proyecto.services.PersonalService;
+import com.gym.proyecto.services.RolPersonalService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,6 +24,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     private PersonalService personalService;
+
+    @Autowired
+    private RolPersonalService rolPersonalService;
 
     @Autowired
     private JwtService jwtService;
@@ -37,20 +42,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Veridica si existe el Header autorizacion en la petición y comienza por
         // Bearer
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            //Guarda el token quitando la palabra Bearer
+            // Guarda el token quitando la palabra Bearer
             token = authHeader.substring(7);
-            //Estrae el correo del token
+            // Estrae el correo del token
             correo = jwtService.extractCorreo(token);
         }
 
-        //Verifica que el usuario no este autenticado y que exista en la base de datos
+        // Verifica que el usuario no este autenticado y que exista en la base de datos
         if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            PersonalModel userDetails = this.personalService.buscarPorCorreo(correo);
+            PersonalModel user = this.personalService.buscarPorCorreo(correo);
+            RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(user.getId());
 
-            //Valida el token
-            if (this.jwtService.validateToken(token, userDetails)) {
+            UserInfoDetails userDetails = new UserInfoDetails(user, rol);
+
+            // Valida el token
+            if (this.jwtService.validateToken(token, user)) {
+                // System.out.println("Authorities: " + userinfo.getAuthorities());
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, null);
+                        null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

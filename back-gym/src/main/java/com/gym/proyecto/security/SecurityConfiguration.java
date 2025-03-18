@@ -17,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,6 +24,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.gym.proyecto.JWT.JwtAuthFilter;
 import com.gym.proyecto.JWT.UserInfoService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -71,14 +72,25 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/gym/auth/**").permitAll()
                         // .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("gym/v1/admin/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/user/**").hasRole("PERSONAL")
                         .anyRequest().authenticated() // Cualquier otro request se debe autenticar
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // Responde con 401
-                                                                                                     // si no está
-                                                                                                     // autenticado
-                )
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized
+                            response.setContentType("application/json");
+                            response.getWriter()
+                                    .write("{\"error\": \"No estás autenticado. Por favor, inicia sesión.\"}");
+                        })// Responde con 401
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            System.out.println("Acceso denegado. Detalles: " + accessDeniedException.getMessage());
+                            response.setStatus(HttpStatus.FORBIDDEN.value()); // 403 Forbidden
+                            response.setContentType("application/json");
+                            response.getWriter()
+                                    .write("{\"error\": \"No tienes permisos para acceder a esta ruta\"}");
+                        }))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

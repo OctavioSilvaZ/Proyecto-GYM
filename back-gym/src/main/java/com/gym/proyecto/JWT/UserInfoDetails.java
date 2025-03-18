@@ -1,15 +1,14 @@
 package com.gym.proyecto.JWT;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.gym.proyecto.models.PersonalModel;
+import com.gym.proyecto.models.RolPersonalModel;
 
 public class UserInfoDetails implements UserDetails {
 
@@ -18,11 +17,10 @@ public class UserInfoDetails implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(PersonalModel personalInfo) {
+    public UserInfoDetails(PersonalModel personalInfo, RolPersonalModel rol) {
         name = personalInfo.getNombre();
         password = personalInfo.getPassword();
-        authorities = Arrays.stream(personalInfo.getNombre().split(",")).map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        authorities = List.of(new SimpleGrantedAuthority("ROLE_" + rol.getRolId().getRol().toUpperCase()));
     }
 
     @Override
