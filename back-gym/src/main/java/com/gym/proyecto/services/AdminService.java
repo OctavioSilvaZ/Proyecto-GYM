@@ -41,8 +41,9 @@ public class AdminService {
         PersonalDatosResponse personalResponse = new PersonalDatosResponse(personal.getId(), personal.getNombre(),
                 personal.getApePaterno(), personal.getApeMaterno(),
                 personal.getDireccion(), personal.getTelefono(), personal.getCorreo(),
-                personal.getEstado().getNombre(), personal.getIne(),
-                personal.getHorario().getTipo(), personal.getJornada().getTipo(), personal.getHoras_faltantes(),
+                personal.getEstado().getNombre(), personal.getEstado().getId(), personal.getIne(),
+                personal.getHorario().getTipo(), personal.getHorario().getId(), personal.getJornada().getTipo(),
+                personal.getJornada().getId(), personal.getHoras_faltantes(),
                 personal.getHoras_extra(), personal.getDias_faltantes(), personal.getBono(), personal.getNoCuenta(),
                 personal.getFecha_pago());
 
@@ -67,9 +68,8 @@ public class AdminService {
 
     public PersonalModel personalUpdate(RegisterPersonalRequest request, long id,
             MultipartFile fotoImg, MultipartFile ineImg) throws IOException {
+
         PersonalModel personal = this.personalService.buscarPorId(id);
-        String foto = null;
-        String ine = null;
 
         if (personal != null) {
             personal.setNombre(request.getNombre());
@@ -78,36 +78,44 @@ public class AdminService {
             personal.setDireccion(request.getDireccion());
             personal.setTelefono(request.getTelefono());
             personal.setCorreo(request.getCorreo());
-            personal.setPassword(this.passwordEncoder.encode(request.getPassword()));
             personal.setEstado(this.estadoPersonalService.buscarId(request.getEstado()));
             personal.setHorario(this.horarioService.buscarId(request.getHorario()));
             personal.setJornada(this.jornadaService.buscarId(request.getJornada()));
             personal.setHoras_faltantes(request.getHorasFaltantes());
             personal.setHoras_extra(request.getHorasExtra());
             personal.setDias_faltantes(request.getDiasFaltantes());
-            personal.setBono(request.getBono());
             personal.setNoCuenta(request.getNoCuenta());
+
+            if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
+                personal.setPassword(this.passwordEncoder.encode(request.getPassword()));
+            }
 
             String nombre = personal.getNombre().substring(0, 3); // Primeras 3 letras del nombre
             String apePaterno = personal.getApePaterno().substring(0, 4);
             String apeMaterno = personal.getApeMaterno().substring(0, 4);
+            String foto = null;
+            String ine = null;
 
             foto = personal.getFoto();
             ine = personal.getIne();
 
-            if (foto == null) {
-                foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
+            if (fotoImg != null && !fotoImg.isEmpty()) {
+                if (foto == null) {
+                    foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
+                }
+                this.personalService.guardarIMG(fotoImg, 0, foto);
             }
 
-            if (ine == null) {
-                ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
+            if (ineImg != null && !ineImg.isEmpty()) {
+                if (ine == null) {
+                    ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
+                }
+                this.personalService.guardarIMG(ineImg, 1, ine);
             }
 
             personal.setFoto(foto);
             personal.setIne(ine);
 
-            this.personalService.guardarIMG(fotoImg, 0, foto);
-            this.personalService.guardarIMG(ineImg, 1, ine);
             this.personalService.guardar(personal, 2);
             return personal;
         } else {

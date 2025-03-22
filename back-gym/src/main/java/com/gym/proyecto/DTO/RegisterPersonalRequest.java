@@ -17,6 +17,5 @@ public class RegisterPersonalRequest {
     private Integer horasFaltantes;
     private Integer horasExtra;
     private Integer diasFaltantes;
-    private Integer bono;
     private Integer noCuenta;
 }

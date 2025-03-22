@@ -122,7 +122,7 @@ public class AuthService {
 
             this.personalService.guardar(nuevoPersonal, 2);
 
-            return ResponseJson.generateResponseObject(HttpStatus.CREATED, nuevoPersonal);
+            return ResponseJson.generateResponseObject(HttpStatus.CREATED, "Se creo nuevo personal");
         }
     }
 }

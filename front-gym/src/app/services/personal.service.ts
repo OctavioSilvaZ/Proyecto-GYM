@@ -23,7 +23,7 @@ export class PersonalService {
   }
 
   registerPersonal(formData: FormData, token: any): Observable<any> {
-    return this._http.post(`${environment.api}admin/registro/personal`, formData, {
+    return this._http.post(`${environment.api}v1/admin/registro/personal`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -31,8 +31,12 @@ export class PersonalService {
   }
 
 
-  updatePersonal() {
-
+  updatePersonal(formData: FormData, token: any, id: number): Observable<any> {
+    return this._http.put(`${environment.api}v1/admin/personal/${id}`, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
   }
 
   deletePersonal(token: any, id: number): Observable<any> {
@@ -41,11 +45,12 @@ export class PersonalService {
     );
   }
 
-  photoPersonal(token: any, personalid: number): Observable<any> {
+  fotoPersonal(token: any, personalid: number): Observable<any> {
     return this._http.get(`${environment.api}v1/admin/personal/image/${personalid}`,
-      { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }
+      { 'headers': { 'Authorization': `Bearer ${token}` }, responseType: 'blob' }
     );
   }
+
 
   estadosPersonal(token: any): Observable<any> {
     return this._http.get(`${environment.api}v1/admin/personal/estados`,

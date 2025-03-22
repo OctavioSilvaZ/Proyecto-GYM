@@ -1,21 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { HeaderComponent } from "../../componentes/header/header.component";
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { ActivatedRoute } from '@angular/router';
 import { PersonalService } from '../../services/personal.service';
 import { AuthService } from '../../services/auth.service';
 import swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-personal-info',
-  imports: [HeaderComponent, FooterComponent],
+  imports: [HeaderComponent, FooterComponent, FormsModule],
   templateUrl: './personal-info.component.html',
   styleUrl: './personal-info.component.css'
 })
 export class PersonalInfoComponent implements OnInit {
   id!: number;
   personalInfo!: any;
+  isEditing = false;
+  estados: any;
+  horarios: any;
+  jornadas: any;
+  passwordConfirm!: String;
 
+  @ViewChild("myModalConf", { static: false }) myModalConf!: TemplateRef<any>;
+  modalTitle!: string;
 
   constructor(private route: ActivatedRoute, private personalService: PersonalService, private authService: AuthService) {
     this.personalInfo = {
@@ -46,6 +54,39 @@ export class PersonalInfoComponent implements OnInit {
       console.error('ID no encontrado en la URL');
     }
     this.getPersonalInfo();
+    this.getEstados();
+    this.getHorarios();
+    this.getJornada();
+  }
+
+  confirmarConstrasenas(): boolean {
+    return (
+      this.personalInfo.password !== '' &&
+      this.personalInfo.passwordConfirm !== '' &&
+      this.personalInfo.password !== this.passwordConfirm
+    );
+  }
+
+
+  checkFiles(event: any, tipo: string): void {
+    // Obtenemos el archivo del input
+    const file: File = event.target.files[0];
+    if (file) {
+      // Si el archivo no está vacío, lo asignamos a la variable correspondiente
+      if (tipo === 'foto') {
+        this.personalInfo.foto = file;
+      } else if (tipo === 'ine') {
+        this.personalInfo.ine = file;
+      }
+    } else {
+      // Si el archivo está vacío (no se ha seleccionado ningún archivo), asignamos null
+      if (tipo === 'foto') {
+        this.personalInfo.foto = null;
+      } else if (tipo === 'ine') {
+        this.personalInfo.ine = null;
+      }
+    }
+
   }
 
   getPersonalInfo() {
@@ -60,6 +101,50 @@ export class PersonalInfoComponent implements OnInit {
         setInterval(() => {
           window.location.href = "/";
         }, 500);
+      }
+    });
+  }
+
+
+  getEstados() {
+    this.personalService.estadosPersonal(this.authService.getToken()).subscribe({
+      next: data => {
+        this.estados = data;
+      }, error(error) {
+        swal.fire({
+          icon: 'error',
+          title: 'Opss',
+          text: "Ocurrio un error al cargar los estados"
+        });
+      }
+    });
+  }
+
+  getHorarios() {
+    this.personalService.horariosPersonal(this.authService.getToken()).subscribe({
+      next: data => {
+        this.horarios = data;
+      }, error(error) {
+        swal.fire({
+          icon: 'error',
+          title: 'Opss',
+          text: "Ocurrio un error al cargar los horarios"
+        });
+      }
+    });
+  }
+
+
+  getJornada() {
+    this.personalService.jornadaPersonal(this.authService.getToken()).subscribe({
+      next: data => {
+        this.jornadas = data;
+      }, error(error) {
+        swal.fire({
+          icon: 'error',
+          title: 'Opss',
+          text: "Ocurrio un error al cargar las jornadas"
+        });
       }
     });
   }
@@ -102,5 +187,86 @@ export class PersonalInfoComponent implements OnInit {
       return;
     });
   }
+
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+  }
+
+  confirm(accion: any) {
+    console.log(accion)
+    if (accion === 'Guardar') {
+      swal.fire({
+        title: '¿Estos cambios son correctos?',
+        text: 'Esta accion no se puede revertir',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, Guardar',
+        cancelButtonText: 'No, Modificar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.sendForm();
+          this.isEditing = false;
+        }
+        return;
+
+      });
+
+    } else {
+      this.isEditing = false;
+    }
+  }
+
+
+  sendForm() {
+    // Crear el FormData aquí
+    const formData = new FormData();
+
+    // Agregar los campos uno por uno
+    formData.append('nombre', this.personalInfo.nombre);
+    formData.append('apePaterno', this.personalInfo.apePaterno);
+    formData.append('apeMaterno', this.personalInfo.apeMaterno);
+    formData.append('direccion', this.personalInfo.direccion);
+    formData.append('telefono', this.personalInfo.telefono.toString());
+    formData.append('correo', this.personalInfo.correo);
+    formData.append('password', this.personalInfo.password);
+    formData.append('estado', this.personalInfo.estado_id);
+    formData.append('horario', this.personalInfo.horario_id);
+    formData.append('jornada', this.personalInfo.jornada_id);
+    formData.append('horasFaltantes', this.personalInfo.horas_Faltantes);
+    formData.append('horasExtra', this.personalInfo.horas_Extra);
+    formData.append('diasFaltantes', this.personalInfo.dias_Faltantes);
+
+    // Archivos
+    if (this.personalInfo.foto) {
+      formData.append('foto', this.personalInfo.foto);
+    }
+
+    if (this.personalInfo.ine) {
+      formData.append('ine', this.personalInfo.ine);
+    }
+
+    this.personalService.updatePersonal(formData, this.authService.getToken(), this.id).subscribe(
+      {
+        next: data => {
+          swal.fire({
+            icon: 'success',
+            title: 'OK',
+            text: 'Se Actualizo correctamente el personal'
+          });
+          setInterval(() => {
+            window.location.reload();
+          }, 1000);
+        }, error(error) {
+          console.log(error)
+          swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: `Error: ${error.error.mensaje}`
+          });
+        }
+      }
+    );
+  }
+
 
 }

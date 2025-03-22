@@ -137,8 +137,6 @@ export class HomeComponent implements OnInit {
         this.modelo.ine = null;
       }
     }
-
-
   }
 
   registrar() {
@@ -173,11 +171,11 @@ export class HomeComponent implements OnInit {
       // Verificar si la foto es nula
       if (!this.modelo.foto) {
         swal.fire({
-          title: '¿Quieres enviar la foto como null?',
+          title: '¿Quieres registrar al personal sin foto?',
           text: 'No has seleccionado una foto. ¿Estás seguro de que deseas continuar?',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Sí, enviar como null',
+          confirmButtonText: 'Sí, registrar después',
           cancelButtonText: 'No, elegir otra foto'
         }).then((result) => {
           if (!result.isConfirmed) {
@@ -187,12 +185,12 @@ export class HomeComponent implements OnInit {
           // Verificar si el INE es nulo
           if (!this.modelo.ine) {
             swal.fire({
-              title: '¿Quieres enviar el INE como null?',
+              title: '¿Quieres registrar al personal sin iNE?',
               text: 'No has seleccionado un INE. ¿Estás seguro de que deseas continuar?',
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonText: 'Sí, enviar como null',
-              cancelButtonText: 'No, elegir otro INE'
+              confirmButtonText: 'Sí, registrar después',
+              cancelButtonText: 'No, elegir INE'
             }).then((result) => {
               if (!result.isConfirmed) {
                 return; // Si el usuario no confirma, no enviamos el formulario
@@ -258,7 +256,6 @@ export class HomeComponent implements OnInit {
       formData.append('ine', this.modelo.ine);
     }
 
-    // Aquí llamas al servicio, pero ahora envías el FormData directamente
     this.personalService.registerPersonal(formData, this.authService.getToken()).subscribe(
       {
         next: data => {

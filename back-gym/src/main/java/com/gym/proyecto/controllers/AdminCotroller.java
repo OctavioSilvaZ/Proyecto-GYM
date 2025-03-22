@@ -93,20 +93,27 @@ public class AdminCotroller {
         PersonalModel correo = this.personalService.buscarPorCorreo(request.getCorreo());
         PersonalModel personalUpdate = this.personalService.buscarPorId(id);
 
-        String fotoTipo = foto.getContentType(); // obtiene los datos de la foto
-        String ineTipo = ine.getContentType(); // Obtiene los datos del ine
+        if (foto != null) {
+            // Obtiene los datos de la foto
+            String fotoTipo = foto.getContentType();
 
-        if (fotoTipo != null && !fotoTipo.equals("image/jpeg")
-                && !fotoTipo.equals("image/png")) {
+            // Verifica que la foto tenga extensión .jpg o .png
+            if (fotoTipo != null && !fotoTipo.equals("image/jpeg")
+                    && !fotoTipo.equals("image/png")) {
 
-            return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
-                    "La foto debe ser de tipo JPG o PNG.");
+                return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
+                        "La foto debe ser de tipo JPG o PNG.");
+            }
         }
 
-        if (ineTipo != null && !ineTipo.equals("application/pdf")) {
-            return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El INE debe ser de tipo PDF.");
+        if (ine != null) {
+            // Obtiene los datos del ine
+            String ineTipo = ine.getContentType();
+            // Verifica que el ine tenga la extension .pdf
+            if (ineTipo != null && !ineTipo.equals("application/pdf")) {
+                return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El INE debe ser de tipo PDF.");
+            }
         }
-
         if (personalUpdate == null) {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontró al usuario");
         }

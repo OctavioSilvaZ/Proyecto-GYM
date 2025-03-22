@@ -16,9 +16,12 @@ public class PersonalDatosResponse {
     private String telefono;
     private String correo;
     private String estado;
+    private Integer estado_id;
     private String ine;
     private String horario;
+    private Integer horario_id;
     private String jornada;
+    private Integer jornada_id;
     private Integer horas_Faltantes;
     private Integer horas_Extra;
     private Integer dias_Faltantes;

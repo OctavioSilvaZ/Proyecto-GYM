@@ -268,6 +268,7 @@
             pattern="[1-9]\d*"
             required="true"
           >
+            <option value="" disabled selected>Selecciona un estado</option>
             @for (estado of estados; track estado.id) {
             <option value="{{ estado.id }}">{{ estado.nombre }}</option>
             }
@@ -292,6 +293,7 @@
             pattern="[1-9]\d*"
             required="true"
           >
+            <option value="" disabled selected>Selecciona una Jornada</option>
             @for (jornada of jornadas; track jornada.id) {
             <option value="{{ jornada.id }}">{{ jornada.tipo }}</option>
             }
@@ -316,6 +318,7 @@
             pattern="[1-9]\d*"
             required="true"
           >
+            <option value="" disabled selected>Selecciona un Horario</option>
             @for (horario of horarios; track horario.id) {
             <option value="{{ horario.id }}">{{ horario.tipo }}</option>
             }

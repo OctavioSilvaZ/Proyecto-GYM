@@ -5,90 +5,498 @@
     class="d-flex flex-column justify-content-center"
     style="background-color: black"
   >
-    <div
-      class="container"
-      style="
-        background-color: white;
-        margin-top: 100px;
-        padding: 20px;
-        border-radius: 2%;
-      "
+    <form
+      name="form"
+      id="form"
+      (submit)="confirm('Guardar')"
+      #formulario="ngForm"
     >
-      <div class="container bg-white mt-2 p-4">
-        <div class="row align-items-center mb-5">
-          <div class="col-md-4 text-center">
-            <img
-              src="assets/img/user2.png"
-              alt="Foto del personal"
-              class="img-fluid ml-4"
-              style="max-width: 350px; width: 100%; height: auto"
-            />
-          </div>
+      <div
+        class="container"
+        style="
+          background-color: white;
+          margin-top: 100px;
+          padding: 20px;
+          border-radius: 2%;
+        "
+      >
+        <div class="container bg-white mt-2 p-4">
+          <!-- Empieza primera parte de la información-->
+          <div class="row align-items-center">
+            <div class="col-md-4 text-center">
+              <img
+                src="assets/img/user2.png"
+                alt="Foto del personal"
+                class="img-fluid ml-2"
+                style="max-width: 350px; width: 100%; height: auto"
+              />
+            </div>
 
-          <!-- Información relevante lado derecho -->
-          <div class="col-md-8 d-flex flex-column justify-content-start">
-            <h2 class="display-4 mt-0 text-center pt-2">
-              {{ personalInfo.nombre }} {{ personalInfo.apePaterno }}
-              {{ personalInfo.apeMaterno }}
-            </h2>
-            <div class="pl-4 ml-2">
-              <p class="mt-5">
-                <strong>Email:</strong> {{ personalInfo.correo }}
-              </p>
-              <p><strong>Password:</strong> ********</p>
-              <p><strong>Estado:</strong> {{ personalInfo.estado }}</p>
-              <p><strong>Horario:</strong> {{ personalInfo.horario }}</p>
-              <p><strong>Jornada:</strong> {{ personalInfo.jornada }}</p>
-              <p><strong>Dirección:</strong> {{ personalInfo.direccion }}</p>
-              <p><strong>Télefono:</strong> {{ personalInfo.telefono }}</p>
-              <a
-                class="btn btn-lg px-4 btn-outline-primary float-end mr-2"
-                (click)="deletePersonal()"
-              >
-                Eliminar
-              </a>
-              <a class="btn btn-lg px-5 btn-outline-dark float-end mr-5">
-                Editar
-              </a>
+            <!-- Información relevante lado derecho -->
+
+            <div class="col-md-8 d-flex flex-column justify-content-start">
+              @if(isEditing){
+              <!-- Empieza nombre-->
+              <div class="text-center justify-content-center d-flex pt-2">
+                <input
+                  type="text"
+                  name="nombre"
+                  class="form-control-plaintext text-center w-auto p-1 ml-2 fs-1"
+                  [(ngModel)]="personalInfo.nombre"
+                  #nombre="ngModel"
+                  style="max-width: 160px"
+                  id="nombre"
+                />
+                @if (nombre.invalid && (nombre.dirty || nombre.touched)) {
+                <div class="alert alert-danger">
+                  @if (nombre.errors) {
+                  <div>El nombre es obligatorio.</div>
+                  }
+                </div>
+                }
+                <input
+                  type="text"
+                  name="apePaterno"
+                  class="form-control-plaintext text-center w-auto p-1 ml-2 fs-1"
+                  style="max-width: 160px"
+                  [(ngModel)]="personalInfo.apePaterno"
+                  #apePaterno="ngModel"
+                  id="apePaterno"
+                />
+                @if (apePaterno.invalid && (apePaterno.dirty ||
+                apePaterno.touched)) {
+                <div class="alert alert-danger">
+                  @if (apePaterno.errors) {
+                  <div>El Apellido Paterno es obligatorio.</div>
+                  }
+                </div>
+                }
+                <input
+                  type="text"
+                  name="apeMaterno"
+                  class="form-control-plaintext text-center w-auto p-1 ml-2 fs-1"
+                  style="max-width: 160px"
+                  [(ngModel)]="personalInfo.apeMaterno"
+                  #apeMaterno="ngModel"
+                  id="apeMaterno"
+                />
+                @if (apeMaterno.invalid && (apeMaterno.dirty ||
+                apeMaterno.touched)) {
+                <div class="alert alert-danger">
+                  @if (apeMaterno.errors) {
+                  <div>El Apellido Materno es obligatorio.</div>
+                  }
+                </div>
+                }
+              </div>
+              <!-- TERMINA NOMBRE-->
+
+              <div class="pl-4 ml-2">
+                <!-- Empieza Form-->
+                <div class="row mb-3 mt-5">
+                  <label
+                    for="correo"
+                    class="col-sm-1 col-form-label font-weight-bold mr-3"
+                    >Correo:</label
+                  >
+                  <div class="col-sm-6">
+                    <input
+                      type="email"
+                      name="correo"
+                      class="form-control"
+                      [(ngModel)]="personalInfo.correo"
+                      #correo="ngModel"
+                      id="correo"
+                    />
+                    @if (correo.invalid && (correo.dirty || correo.touched)) {
+                    <div class="alert alert-danger">
+                      @if (correo.errors) {
+                      <div>El Correo es obligatorio.</div>
+                      }
+                    </div>
+                    }
+                  </div>
+                  <span class="text-center ml-4 pt-3"
+                    >¡La contraseña no es necesario modificarla!</span
+                  >
+                </div>
+
+                <div class="row align-items-center mb-3">
+                  <div class="col-auto pr-0">
+                    <label
+                      for="password"
+                      class="col-form-label font-weight-bold mb-0"
+                      >Contraseña:</label
+                    >
+                  </div>
+                  <div class="col-sm-3">
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                      [(ngModel)]="personalInfo.password"
+                      #password="ngModel"
+                      id="password"
+                    />
+                  </div>
+
+                  <div class="col-auto pr-0">
+                    <label
+                      for="passwordConfirm"
+                      class="col-form-label font-weight-bold mb-0"
+                      >Confirmar Contraseña:</label
+                    >
+                  </div>
+                  <div class="col-sm-3">
+                    <input
+                      type="password"
+                      name="passwordConfirm"
+                      class="form-control"
+                      id="passwordConfirm"
+                      [(ngModel)]="passwordConfirm"
+                      #passwordConfirmField="ngModel"
+                    />
+                    @if (confirmarConstrasenas()) {
+                    <div class="alert alert-danger">
+                      Las contraseñas no coinciden.
+                    </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label
+                    for="estado"
+                    class="col-sm-1 col-form-label font-weight-bold mr-5"
+                    >Estado:</label
+                  >
+                  <select
+                    name="estado"
+                    id="estado"
+                    class="col-sm-3"
+                    [(ngModel)]="personalInfo.estado_id"
+                    #estado="ngModel"
+                    pattern="[1-9]\d*"
+                    required="true"
+                  >
+                    @for (estado of estados; track estado.id) {
+                    <option value="{{ estado.id }}">{{ estado.nombre }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="row mb-3">
+                  <label
+                    for="jornada"
+                    class="col-sm-1 col-form-label font-weight-bold mr-5"
+                    >Jornada:</label
+                  >
+                  <select
+                    name="jornada"
+                    id="jornada"
+                    class="col-sm-3"
+                    [(ngModel)]="personalInfo.jornada_id"
+                    #jornada="ngModel"
+                    pattern="[1-9]\d*"
+                    required="true"
+                  >
+                    @for (jornada of jornadas; track jornada.id) {
+
+                    <option value="{{ jornada.id }}">{{ jornada.tipo }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="row mb-3">
+                  <label
+                    for="horario"
+                    class="col-sm-1 col-form-label font-weight-bold mr-5"
+                    >Horario:</label
+                  >
+                  <select
+                    name="horario"
+                    id="horario"
+                    class="col-sm-3"
+                    [(ngModel)]="personalInfo.horario_id"
+                    #horario="ngModel"
+                    pattern="[1-9]\d*"
+                    required="true"
+                  >
+                    @for (horario of horarios; track horario.id) {
+
+                    <option value="{{ horario.id }}">{{ horario.tipo }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="row mb-3">
+                  <label
+                    for="direccion"
+                    class="col-sm-1 col-form-label font-weight-bold mr-4"
+                    >Dirección:</label
+                  >
+                  <div class="col-sm-6">
+                    <input
+                      type="text"
+                      name="direccion"
+                      class="form-control"
+                      [(ngModel)]="personalInfo.direccion"
+                      #direccion="ngModel"
+                      id="direccion"
+                    />
+                    @if (direccion.invalid && (direccion.dirty ||
+                    direccion.touched)) {
+                    <div class="alert alert-danger">
+                      @if (direccion.errors) {
+                      <div>La Dirección es obligatoria.</div>
+                      }
+                    </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label
+                    for="telefono"
+                    class="col-sm-1 col-form-label font-weight-bold mr-4"
+                    >Télefono:</label
+                  >
+                  <div class="col-sm-6 pb-5">
+                    <input
+                      type="number"
+                      name="telefono"
+                      class="form-control"
+                      [(ngModel)]="personalInfo.telefono"
+                      #telefono="ngModel"
+                      id="telefono"
+                    />
+                    @if (telefono.invalid && (telefono.dirty ||
+                    telefono.touched)) {
+                    <div class="alert alert-danger">
+                      @if (telefono.errors) {
+                      <div>El Número de télefono es obligatorio.</div>
+                      }
+                    </div>
+                    }
+                  </div>
+                </div>
+                <!-- Termina FORMULARIO DERECHO-->
+
+                <a
+                  class="btn btn-lg px-4 btn-outline-primary float-end mr-2"
+                  (click)="toggleEdit()"
+                >
+                  Cancelar
+                </a>
+                <button
+                  type="submit"
+                  class="btn btn-lg px-5 btn-outline-dark float-end mr-5"
+                >
+                  Guardar
+                </button>
+              </div>
+
+              } @else {
+              <!-- Nombre no editable-->
+              <h2 class="display-4 mt-0 text-center pt-2">
+                {{ personalInfo.nombre }} {{ personalInfo.apePaterno }}
+                {{ personalInfo.apeMaterno }}
+              </h2>
+              <!--Termina Nombre no editable-->
+
+              <!-- Div de Informacio lado derecho-->
+              <div class="pl-4 ml-2">
+                <p class="mt-5">
+                  <strong>Correo:</strong> {{ personalInfo.correo }}
+                </p>
+                <p><strong>Password:</strong> ***********</p>
+                <p><strong>Estado:</strong> {{ personalInfo.estado }}</p>
+                <p><strong>Horario:</strong> {{ personalInfo.horario }}</p>
+                <p><strong>Jornada:</strong> {{ personalInfo.jornada }}</p>
+                <p><strong>Dirección:</strong> {{ personalInfo.direccion }}</p>
+                <p><strong>Télefono:</strong> {{ personalInfo.telefono }}</p>
+
+                <a
+                  class="btn btn-lg px-4 btn-outline-primary float-end mr-2"
+                  (click)="deletePersonal()"
+                >
+                  Eliminar
+                </a>
+                <a
+                  class="btn btn-lg px-5 btn-outline-dark float-end mr-5"
+                  (click)="toggleEdit()"
+                >
+                  Editar
+                </a>
+              </div>
+              }
+              <!-- FIN ELSE-->
             </div>
           </div>
-        </div>
+          <!-- TERMINA primera parte de la información-->
 
-        <div class="row">
-          <div class="col-12 mb-3">
-            <h4>Información adicional</h4>
-          </div>
+          <!-- Segunda parte de la información-->
+          <div class="row">
+            <div class="col-12 mb-3">
+              <h4>
+                Información adicional @if(isEditing){
+                <span class="text-muted small ml-2"
+                  >(La Foto e Ine también son opcionales)</span
+                >
+                }
+              </h4>
+            </div>
 
-          <!-- Primera columna -->
-          <div class="col-6 col-md-4 mb-3 pt-3">
-            <p>
-              <strong>Horas faltantes:</strong>
-              {{ personalInfo.horas_Faltantes }}
-            </p>
-            <p><strong>Horas extra:</strong> {{ personalInfo.horas_Extra }}</p>
-          </div>
+            @if(isEditing){
+            <!-- Primera columna -->
+            <div class="col-md-3">
+              <div class="row mb-3">
+                <label
+                  for="horas_Faltantes"
+                  class="col-sm-5 col-form-label font-weight-bold"
+                  >Horas Faltantes:</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="number"
+                    name="horas_Faltantes"
+                    class="form-control text-center"
+                    [(ngModel)]="personalInfo.horas_Faltantes"
+                    #horas_Faltantes="ngModel"
+                    id="horas_Faltantes"
+                  />
+                </div>
+              </div>
 
-          <!-- Segunda columna -->
-          <div class="col-6 col-md-4 mb-3 pt-3">
-            <p>
-              <strong>Días faltantes:</strong> {{ personalInfo.dias_Faltantes }}
-            </p>
-            <p><strong>Bono:</strong> {{ personalInfo.bono }}</p>
-          </div>
+              <div class="row">
+                <label
+                  for="horas_Extra"
+                  class="col-sm-5 col-form-label font-weight-bold"
+                  >Horas extra:</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="number"
+                    name="horas_Extra"
+                    class="form-control text-center"
+                    [(ngModel)]="personalInfo.horas_Extra"
+                    #horas_Extra="ngModel"
+                    id="horas_Extra"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <!-- Tercera columna -->
-          <div class="col-6 col-md-4 mb-3 pt-3">
-            @if(personalInfo.ine==null){
-            <p><strong>INE:</strong> Aún no registrado</p>
-            }@else {
-            <p><strong>INE:</strong> Registrado</p>
+            <!-- Segunda columna -->
+            <div class="col-md-3">
+              <div class="row mb-4 pb-3">
+                <label
+                  for="dias_Faltantes"
+                  class="col-sm-7 col-form-label font-weight-bold"
+                  >Días faltantes:</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    type="number"
+                    name="dias_Faltantes"
+                    class="form-control text-center"
+                    [(ngModel)]="personalInfo.dias_Faltantes"
+                    #dias_Faltantes="ngModel"
+                    id="dias_Faltantes"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-sm-7 col-form-label font-weight-bold"
+                  >Bono:</label
+                >
+                <div class="col-sm-4">
+                  <input
+                    disabled
+                    type="number"
+                    name="bono"
+                    class="form-control text-center"
+                    [(ngModel)]="personalInfo.bono"
+                    #bono="ngModel"
+                    id="bono"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tercera columna -->
+            <div class="col-md-6">
+              <div class="row mb-4 pb-3">
+                <label class="col-sm-1 mr-3 col-form-label font-weight-bold"
+                  >INE:</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    name="ine"
+                    class="form-control"
+                    (change)="checkFiles($event, 'ine')"
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <label class="col-sm-1 mr-3 col-form-label font-weight-bold"
+                  >Foto:</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="foto"
+                    class="form-control"
+                    (change)="checkFiles($event, 'foto')"
+                  />
+                </div>
+              </div>
+            </div>
+
+            } @else{
+            <!-- Primera columna -->
+            <div class="col-6 col-md-4 mb-3 pt-3">
+              <p>
+                <strong>Horas faltantes:</strong>
+                {{ personalInfo.horas_Faltantes }}
+              </p>
+              <p>
+                <strong>Horas extra:</strong> {{ personalInfo.horas_Extra }}
+              </p>
+            </div>
+
+            <!-- Segunda columna -->
+            <div class="col-6 col-md-4 mb-3 pt-3">
+              <p>
+                <strong>Días faltantes:</strong>
+                {{ personalInfo.dias_Faltantes }}
+              </p>
+              <p><strong>Bono:</strong> {{ personalInfo.bono }}</p>
+            </div>
+
+            <!-- Tercera columna -->
+            <div class="col-6 col-md-4 mb-3 pt-3">
+              @if(personalInfo.ine==null){
+              <p><strong>INE:</strong> Aún no registrado</p>
+              }@else {
+              <p><strong>INE:</strong> Registrado</p>
+              }
+              <p>
+                <strong>Fecha de pago:</strong> {{ personalInfo.fecha_pago }}
+              </p>
+            </div>
             }
-
-            <p><strong>Fecha de pago:</strong> {{ personalInfo.fecha_pago }}</p>
           </div>
+
+          <!-- TERMINA Segunda parte de la información-->
         </div>
       </div>
-    </div>
+    </form>
   </div>
 
   <app-footer></app-footer>
