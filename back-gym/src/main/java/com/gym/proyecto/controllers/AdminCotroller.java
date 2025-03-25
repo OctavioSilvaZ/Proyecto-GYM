@@ -147,7 +147,7 @@ public class AdminCotroller {
 
     // Obtener Foto de Personal
     @GetMapping("/personal/image/{id}")
-    public ResponseEntity<?> updateImgPersonal(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getImgPersonal(@PathVariable("id") Long id) {
 
         PersonalModel personal = this.personalService.buscarPorId(id);
 
@@ -167,6 +167,33 @@ public class AdminCotroller {
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
                     .body(img);
+
+        } catch (Exception e) {
+            return ResponseJson.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocurrio un error");
+        }
+    }
+
+    @GetMapping("/personal/ine/{id}")
+    public ResponseEntity<?> getInePersonal(@PathVariable("id") Long id) {
+
+        PersonalModel personal = this.personalService.buscarPorId(id);
+
+        if (personal == null) {
+            return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontró al usuario");
+        }
+
+        try {
+            // Ruta
+            // FileSystemResource es para buscar carpetas en la raiz del proyecto o fuera
+            Resource pdf = new FileSystemResource("personalIne/" + personal.getIne());
+
+            if (!pdf.exists()) {
+                return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontro el ine");
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdf);
 
         } catch (Exception e) {
             return ResponseJson.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocurrio un error");

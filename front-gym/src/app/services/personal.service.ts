@@ -52,6 +52,13 @@ export class PersonalService {
   }
 
 
+  inePersonal(token: any, personalid: number): Observable<any> {
+    return this._http.get(`${environment.api}v1/admin/personal/ine/${personalid}`,
+      { 'headers': { 'Authorization': `Bearer ${token}` }, responseType: 'blob' }
+    );
+  }
+
+
   estadosPersonal(token: any): Observable<any> {
     return this._http.get(`${environment.api}v1/admin/personal/estados`,
       { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }

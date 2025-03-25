@@ -6,6 +6,7 @@ import { PersonalService } from '../../services/personal.service';
 import { AuthService } from '../../services/auth.service';
 import swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-personal-info',
@@ -21,11 +22,13 @@ export class PersonalInfoComponent implements OnInit {
   horarios: any;
   jornadas: any;
   passwordConfirm!: String;
+  imagen: any;
+  ine: any;
 
   @ViewChild("myModalConf", { static: false }) myModalConf!: TemplateRef<any>;
   modalTitle!: string;
 
-  constructor(private route: ActivatedRoute, private personalService: PersonalService, private authService: AuthService) {
+  constructor(private sanitizer: DomSanitizer, private route: ActivatedRoute, private personalService: PersonalService, private authService: AuthService) {
     this.personalInfo = {
       nombre: "",
       apePaterno: "",
@@ -57,7 +60,10 @@ export class PersonalInfoComponent implements OnInit {
     this.getEstados();
     this.getHorarios();
     this.getJornada();
+    this.getFoto();
   }
+
+
 
   confirmarConstrasenas(): boolean {
     return (
@@ -86,7 +92,40 @@ export class PersonalInfoComponent implements OnInit {
         this.personalInfo.ine = null;
       }
     }
+  }
 
+  //Convierte el archivo
+  createImageFromBlob(archivo: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.imagen = reader.result;
+    }, false);
+
+    if (archivo) {
+      reader.readAsDataURL(archivo);
+    }
+  }
+
+  getFoto() {
+    this.personalService.fotoPersonal(this.authService.getToken(), this.id).subscribe({
+      next: data => {
+        this.createImageFromBlob(data);
+      }, error(error) {
+        console.log("no se encontro foto");
+        console.log(error);
+      }
+    });
+  }
+
+  getIne() {
+    this.personalService.inePersonal(this.authService.getToken(), this.id).subscribe({
+      next: data => {
+        this.ine = URL.createObjectURL(data);
+        window.open(this.ine);
+      }, error(error) {
+        console.log(error);
+      }
+    });
   }
 
   getPersonalInfo() {
@@ -218,10 +257,10 @@ export class PersonalInfoComponent implements OnInit {
 
 
   sendForm() {
-    // Crear el FormData aquí
+    // Crear el FormData
     const formData = new FormData();
 
-    // Agregar los campos uno por uno
+    // Agregar los campos 
     formData.append('nombre', this.personalInfo.nombre);
     formData.append('apePaterno', this.personalInfo.apePaterno);
     formData.append('apeMaterno', this.personalInfo.apeMaterno);
