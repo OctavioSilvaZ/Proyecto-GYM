@@ -35,12 +35,14 @@ public class AdminService {
 
     public PersonalDatosResponse personalFound(PersonalModel personal) {
         // Listas para guardar los datos de los bonos
+        Integer bonoTotal=0;
         List<Integer> bonosMonto = new ArrayList<>();
         List<String> bonosNombres = new ArrayList<>();
         if (personal.getBonosAsignados() != null) {
             for (PersonalBonosModel bono : personal.getBonosAsignados()) {
                 bonosMonto.add(bono.getBono().getMonto());
                 bonosNombres.add(bono.getBono().getNombre());
+                bonoTotal += bono.getBono().getMonto();
             }
         } else {
             bonosMonto = null;
@@ -54,7 +56,7 @@ public class AdminService {
                 personal.getHorario().getTipo(), personal.getHorario().getId(), personal.getJornada().getTipo(),
                 personal.getJornada().getId(), personal.getHoras_faltantes(),
                 personal.getHoras_extra(), personal.getDias_faltantes(),
-                bonosMonto, bonosNombres, personal.getNoCuenta(),
+                bonosMonto,bonoTotal, bonosNombres, personal.getNoCuenta(),
                 personal.getFecha_pago());
 
         return personalResponse;

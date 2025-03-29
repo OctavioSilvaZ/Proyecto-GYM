@@ -3,8 +3,10 @@ package com.gym.proyecto.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,8 +33,14 @@ public class BonosDescuentosController {
     @Autowired
     private PersonalBonosService personalBonosService;
 
+    //Listar bonos
+    @GetMapping("/bonos")
+    public ResponseEntity<?> listarBonos(){
+        return ResponseEntity.ok().body(this.bonosService.listar());
+    }
+
     // Registrar un nuevo bono
-    @PostMapping("/registrar-bono")
+    @PostMapping("/bonos/registrar")
     public ResponseEntity<?> bonoParaPersonal(@RequestBody BonosModel bono) {
         try {
             this.bonosService.guardar(bono);
@@ -46,12 +54,12 @@ public class BonosDescuentosController {
     }
 
     // Asignar bono a todo el personal
-    @PostMapping("bono-personal/{id}")
-    public ResponseEntity<?> asginarBonoAlPersonal(@PathVariable("id") Long id) {
-        BonosModel bono = this.bonosService.buscarporId(id);
+    @PutMapping("/bonos/empleados/{idBono}")
+    public ResponseEntity<?> asginarBonoAlPersonal(@PathVariable("idBono") Long idBono) {
+        BonosModel bono = this.bonosService.buscarporId(idBono);
         if (bono != null) {
             this.personalService.asignarBonoPersonal(bono.getId());
-            return ResponseJson.generateResponse(HttpStatus.OK, "Se asgino el bono a todo el personal");
+            return ResponseJson.generateResponse(HttpStatus.OK, "Se asigno el bono a todo el personal");
         } else {
             return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "No se encontro el bono asignado");
         }
@@ -59,7 +67,7 @@ public class BonosDescuentosController {
 
 
     //Asigna Bono individual
-    @PostMapping("/bono-individual")
+    @PutMapping("/bonos/individual")
     public ResponseEntity<?> bonoId(@RequestBody BonoIndividualRequest request) {
 
         final int ESTADO_ACTIVO = 1;

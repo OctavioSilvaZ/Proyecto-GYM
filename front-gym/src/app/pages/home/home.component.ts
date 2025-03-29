@@ -175,7 +175,9 @@ export class HomeComponent implements OnInit {
           text: 'No has seleccionado una foto. ¿Estás seguro de que deseas continuar?',
           icon: 'warning',
           showCancelButton: true,
+          confirmButtonColor: '#3085d6',
           confirmButtonText: 'Sí, registrar después',
+          cancelButtonColor: 'red',
           cancelButtonText: 'No, elegir otra foto'
         }).then((result) => {
           if (!result.isConfirmed) {
@@ -189,7 +191,9 @@ export class HomeComponent implements OnInit {
               text: 'No has seleccionado un INE. ¿Estás seguro de que deseas continuar?',
               icon: 'warning',
               showCancelButton: true,
+              confirmButtonColor: '#3085d6',
               confirmButtonText: 'Sí, registrar después',
+              cancelButtonColor: 'red',
               cancelButtonText: 'No, elegir INE'
             }).then((result) => {
               if (!result.isConfirmed) {
@@ -213,7 +217,9 @@ export class HomeComponent implements OnInit {
             text: 'No has seleccionado un INE. ¿Estás seguro de que deseas continuar?',
             icon: 'warning',
             showCancelButton: true,
+            confirmButtonColor: '#3085d6',
             confirmButtonText: 'Sí, enviar como null',
+            cancelButtonColor: 'red',
             cancelButtonText: 'No, elegir otro INE'
           }).then((result) => {
             if (!result.isConfirmed) {

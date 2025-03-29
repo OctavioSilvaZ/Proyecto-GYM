@@ -13,7 +13,7 @@ export class PersonalService {
 
   getListarPersonal(token: any): Observable<any> {
     return this._http.get(`${environment.api}v1/admin/personal`,
-      { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } })
+      { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } });
   }
 
   getPersonalId(token: any, id: number): Observable<any> {
@@ -30,7 +30,6 @@ export class PersonalService {
     });
   }
 
-
   updatePersonal(formData: FormData, token: any, id: number): Observable<any> {
     return this._http.put(`${environment.api}v1/admin/personal/${id}`, formData, {
       headers: {
@@ -39,11 +38,13 @@ export class PersonalService {
     });
   }
 
+
   deletePersonal(token: any, id: number): Observable<any> {
     return this._http.delete(`${environment.api}v1/admin/personal/${id}`,
       { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }
     );
   }
+
 
   fotoPersonal(token: any, personalid: number): Observable<any> {
     return this._http.get(`${environment.api}v1/admin/personal/image/${personalid}`,
@@ -83,6 +84,5 @@ export class PersonalService {
       { 'headers': { 'content-Type': 'application/json', 'Authorization': `Bearer ${token}` } }
     );
   }
-
 
 }

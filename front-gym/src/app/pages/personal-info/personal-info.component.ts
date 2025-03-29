@@ -237,6 +237,7 @@ export class PersonalInfoComponent implements OnInit {
         text: 'Esta accion no se puede revertir',
         icon: 'warning',
         showCancelButton: true,
+        confirmButtonColor: '#3085d6',
         confirmButtonText: 'Sí, Guardar',
         cancelButtonText: 'No, Modificar'
       }).then((result) => {

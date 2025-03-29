@@ -7,15 +7,32 @@
       alt="Image"
     />
     <div
-      class="position-absolute top-50 start-50 translate-middle text-white"
-      style="width: 80%"
+      class="position-absolute top-50 start-50 translate-middle text-white w-100"
     >
-      <div class="container">
+      <div class="container pt-5">
         <div class="mb-4 mt-5 pt-5">
-          <button class="btn btn-primary mr-5">Seleccionar Bono</button>
-          <button class="bg-black text-white btn btn-outline-light">
-            Asignar bono a todos
-          </button>
+          <select
+            name="bono"
+            id="bono"
+            class="col-sm-3 col-form-label mr-5"
+            [(ngModel)]="bonoSeleccionado"
+            pattern="[1-9]\d*"
+            required="true"
+          >
+            <option [ngValue]="0" disabled>Selecciona un bono</option>
+
+            @for (bono of bonos; track bono.id) {
+            <option value="{{ bono.id }}">
+              {{ bono.nombre }} (${{ bono.monto }})
+            </option>
+            }
+          </select>
+          <a
+            class="btn btn-outline-light bg-primary text-white float-end"
+            (click)="ventanaModal()"
+          >
+            Registrar Nuevo Bono
+          </a>
         </div>
 
         <div
@@ -31,9 +48,11 @@
               placeholder="Buscar Personal"
             />
           </div>
-
-          <button class="btn btn-outline-light bg-primary text-white">
-            Registrar Nuevo Bono
+          <button
+            class="bg-black text-white btn btn-outline-light"
+            (click)="BonoEmpleados()"
+          >
+            Asignar bono a todos
           </button>
         </div>
 
@@ -74,7 +93,11 @@
                       {{ dato.bono_nombre }}
                     </td>
                     <td class="bg-secondary text-white align-middle">
-                      <a class="text-white btn w-100">Asignar</a>
+                      <a
+                        class="text-white btn w-100"
+                        (click)="BonoIndividual(dato.id)"
+                        >Asignar</a
+                      >
                     </td>
                   </tr>
                   }
@@ -88,3 +111,81 @@
   </div>
 </div>
 <app-footer></app-footer>
+
+<!--Modal para registrar -->
+
+<ng-template #myModalConf let-modal>
+  <div class="modal-content" style="background-color: #fff">
+    <div class="modal-header text-white mb-3">
+      <h4 class="modal-title">Registrar Bono</h4>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.close('Cerrado desde la ventana')"
+        aria-label="Close"
+        title="Cerrar"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form
+        name="form"
+        id="form"
+        (submit)="RegistrarBono()"
+        #formulario="ngForm"
+      >
+        <div class="mb-3">
+          <label for="nombre">Nombre del Bono:</label>
+          <input
+            type="text"
+            name="nombre"
+            class="form-control"
+            [(ngModel)]="modelo.nombre"
+            #nombre="ngModel"
+            required="true"
+            placeholder="Ejem: Reyes2025"
+          />
+          @if (nombre.invalid && (nombre.dirty || nombre.touched)) {
+          <div class="alert alert-danger">
+            @if (nombre.errors) {
+            <div>El nombre del bono es obligatorio.</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="monto">Monto:</label>
+          <input
+            type="number"
+            min="0"
+            name="monto"
+            class="form-control"
+            [(ngModel)]="modelo.monto"
+            #monto="ngModel"
+            required="true"
+            placeholder="Monto"
+          />
+          @if (monto.invalid && (monto.dirty || monto.touched)) {
+          <div class="alert alert-danger">
+            @if (monto.errors) {
+            <div>Asigna un Moto valido</div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="mb-3" style="text-align: right">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!formulario.form.valid"
+          >
+            <i class="fas fa-arrow-up"></i>Registrar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<!--Termina Modal-->

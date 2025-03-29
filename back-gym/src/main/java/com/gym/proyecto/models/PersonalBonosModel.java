@@ -24,7 +24,7 @@ public class PersonalBonosModel {
 
     @ManyToOne
     @JoinColumn(name="personal_id")
-    @JsonBackReference // Esta es la referencia inversa
+    @JsonBackReference // Marca el lado "referenciado" que se omite en la serialización
     private PersonalModel personal;
 
     @ManyToOne

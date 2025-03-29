@@ -79,7 +79,7 @@ public class PersonalModel {
 
     //Un personal puede tener varios bonos
     @OneToMany(mappedBy = "personal")
-     @JsonManagedReference
+     @JsonManagedReference // Marca el lado "propietario" que se serializa
     private List<PersonalBonosModel> bonosAsignados;
 
     

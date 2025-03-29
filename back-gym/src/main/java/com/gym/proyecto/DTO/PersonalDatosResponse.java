@@ -27,6 +27,7 @@ public class PersonalDatosResponse {
     private Integer horas_Extra;
     private Integer dias_Faltantes;
     private List<Integer> bono;
+    private Integer bonoTotal;
     private List<String> bonoNombre;
     private Integer noCuenta;
     private LocalDate fecha_pago;

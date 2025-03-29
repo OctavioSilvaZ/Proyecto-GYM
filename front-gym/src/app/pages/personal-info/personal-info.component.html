@@ -415,7 +415,7 @@
                     type="number"
                     name="bono"
                     class="form-control text-center"
-                    [(ngModel)]="personalInfo.bono"
+                    [(ngModel)]="personalInfo.bonoTotal"
                     #bono="ngModel"
                     id="bono"
                   />
@@ -477,7 +477,7 @@
               <p>
                 @if(personalInfo.bonoNombre !=null){
                 <strong>Bono:</strong> ({{ personalInfo.bonoNombre }}) ${{
-                  personalInfo.bono
+                  personalInfo.bonoTotal
                 }}
                 } @else {
                 <strong>Bono:</strong> $0 }
