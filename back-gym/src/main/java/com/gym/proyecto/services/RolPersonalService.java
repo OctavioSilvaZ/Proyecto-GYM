@@ -50,8 +50,4 @@ public class RolPersonalService {
         }
     }
 
-    public void eliminarPorPersonalId(Long personalId) {
-        this.repository.deleteByPersonal_Id(personalId);
-    }
-
 }

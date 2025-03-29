@@ -88,10 +88,8 @@ public class AuthService {
                         "No existe un horario vespertino para el fin de semana");
             }
 
-            LocalDate fechaActual = LocalDate.now();
-
             // Suma 15 días que es el pago quincenal
-            LocalDate fechaPago = fechaActual.plusDays(15);
+            LocalDate fechaPago = LocalDate.now().plusDays(15);
 
             String nombre = request.getNombre().substring(0, 3); // Primeras 3 letras del nombre
             String apePaterno = request.getApePaterno().substring(0, 4);
@@ -106,19 +104,19 @@ public class AuthService {
 
             if (fotoImg != null && !fotoImg.isEmpty()) {
                 foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
-                this.personalService.guardarIMG(fotoImg, 0, foto);
+                this.personalService.guardarArchivo(fotoImg, 0, foto);
             }
 
             if (ineImg != null && !ineImg.isEmpty()) {
                 ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
-                this.personalService.guardarIMG(ineImg, 1, ine);
+                this.personalService.guardarArchivo(ineImg, 1, ine);
             }
 
             PersonalModel nuevoPersonal = new PersonalModel(
                     request.getNombre(), request.getApePaterno(), request.getApeMaterno(),
                     request.getDireccion(), request.getTelefono(), request.getCorreo(),
                     this.passwordEncoder.encode(request.getPassword()), foto, ine,
-                    fechaActual, estado, horario, jornada, fechaPago);
+                    estado, horario, jornada, fechaPago);
 
             this.personalService.guardar(nuevoPersonal, 2);
 

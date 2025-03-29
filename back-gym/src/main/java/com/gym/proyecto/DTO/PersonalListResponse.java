@@ -1,6 +1,7 @@
 package com.gym.proyecto.DTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,4 +17,6 @@ public class PersonalListResponse {
     private String horario;
     private String jornada;
     private LocalDate fechaPago;
+    private List<Integer> bono;
+    private List<String> bono_nombre;
 }

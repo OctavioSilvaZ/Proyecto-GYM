@@ -12,14 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gym.proyecto.DTO.PersonalDatosResponse;
 import com.gym.proyecto.DTO.PersonalListResponse;
 import com.gym.proyecto.DTO.RegisterPersonalRequest;
+import com.gym.proyecto.models.PersonalBonosModel;
 import com.gym.proyecto.models.PersonalModel;
-import com.gym.proyecto.models.RolPersonalModel;
 
 @Service
 public class AdminService {
-
-    @Autowired
-    private RolPersonalService rolPersonalService;
 
     @Autowired
     private PersonalService personalService;
@@ -37,6 +34,18 @@ public class AdminService {
     private BCryptPasswordEncoder passwordEncoder;
 
     public PersonalDatosResponse personalFound(PersonalModel personal) {
+        // Listas para guardar los datos de los bonos
+        List<Integer> bonosMonto = new ArrayList<>();
+        List<String> bonosNombres = new ArrayList<>();
+        if (personal.getBonosAsignados() != null) {
+            for (PersonalBonosModel bono : personal.getBonosAsignados()) {
+                bonosMonto.add(bono.getBono().getMonto());
+                bonosNombres.add(bono.getBono().getNombre());
+            }
+        } else {
+            bonosMonto = null;
+            bonosNombres = null;
+        }
 
         PersonalDatosResponse personalResponse = new PersonalDatosResponse(personal.getId(), personal.getNombre(),
                 personal.getApePaterno(), personal.getApeMaterno(),
@@ -44,7 +53,8 @@ public class AdminService {
                 personal.getEstado().getNombre(), personal.getEstado().getId(), personal.getIne(),
                 personal.getHorario().getTipo(), personal.getHorario().getId(), personal.getJornada().getTipo(),
                 personal.getJornada().getId(), personal.getHoras_faltantes(),
-                personal.getHoras_extra(), personal.getDias_faltantes(), personal.getBono(), personal.getNoCuenta(),
+                personal.getHoras_extra(), personal.getDias_faltantes(),
+                bonosMonto, bonosNombres, personal.getNoCuenta(),
                 personal.getFecha_pago());
 
         return personalResponse;
@@ -55,14 +65,28 @@ public class AdminService {
         List<PersonalListResponse> lista = new ArrayList<>();
 
         personal.forEach((datos) -> {
-            RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(datos.getId());
-            if (rol.getId() != 1) {
+
+            // Se recorre para buscar todos los bonos que tenga cada personal
+            List<Integer> bonosMonto = new ArrayList<>();
+            List<String> bonosNombres = new ArrayList<>();
+            if (datos.getBonosAsignados() != null) {
+                for (PersonalBonosModel bono : datos.getBonosAsignados()) {
+                    bonosMonto.add(bono.getBono().getMonto());
+                    bonosNombres.add(bono.getBono().getNombre());
+                }
+            } else {
+                bonosMonto = null;
+                bonosNombres = null;
+            }
+
+            // Oculta el rol personal para no mostrarlo
+            if (datos.getRolPersonal().getRolId().getId() != 1) {
                 lista.add(new PersonalListResponse(datos.getId(), datos.getNombre(), datos.getApePaterno(),
                         datos.getApeMaterno(), datos.getEstado().getNombre(), datos.getHorario().getTipo(),
-                        datos.getJornada().getTipo(), datos.getFecha_pago()));
+                        datos.getJornada().getTipo(), datos.getFecha_pago(),
+                        bonosMonto, bonosNombres));
             }
         });
-
         return lista;
     }
 
@@ -103,14 +127,14 @@ public class AdminService {
                 if (foto == null) {
                     foto = nombre + "_" + apePaterno + "_" + apeMaterno + ".png";
                 }
-                this.personalService.guardarIMG(fotoImg, 0, foto);
+                this.personalService.guardarArchivo(fotoImg, 0, foto);
             }
 
             if (ineImg != null && !ineImg.isEmpty()) {
                 if (ine == null) {
                     ine = nombre + "_" + apePaterno + "_" + apeMaterno + "_Ine" + ".pdf";
                 }
-                this.personalService.guardarIMG(ineImg, 1, ine);
+                this.personalService.guardarArchivo(ineImg, 1, ine);
             }
 
             personal.setFoto(foto);

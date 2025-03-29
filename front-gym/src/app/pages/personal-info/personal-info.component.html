@@ -1,10 +1,7 @@
 <app-header></app-header>
 
 <div class="container-fluid p-0">
-  <div
-    class="d-flex flex-column justify-content-center"
-    style="background-color: black"
-  >
+  <div class="d-flex flex-column bg-black justify-content-center">
     <form
       name="form"
       id="form"
@@ -12,13 +9,8 @@
       #formulario="ngForm"
     >
       <div
-        class="container"
-        style="
-          background-color: white;
-          margin-top: 100px;
-          padding: 20px;
-          border-radius: 2%;
-        "
+        class="container bg-white p-2"
+        style="margin-top: 100px; border-radius: 2%"
       >
         <div class="container bg-white mt-2 p-4">
           <!-- Empieza primera parte de la información-->
@@ -28,14 +20,12 @@
               <img
                 src="assets/img/user2.png"
                 alt="Foto del personal"
-                class="img-fluid ml-2"
-                style="max-width: 350px; width: 100%; height: auto"
+                class="img-fluid ml-2 w-100"
               />} @else {
               <img
                 [src]="imagen"
                 alt="Foto del personal"
-                class="img-fluid ml-2"
-                style="max-width: 350px; width: 100%; height: auto"
+                class="img-fluid ml-2 w-100"
               />
               }
             </div>
@@ -403,7 +393,7 @@
                   class="col-sm-5 col-form-label font-weight-bold"
                   >Días faltantes:</label
                 >
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                   <input
                     type="number"
                     name="dias_Faltantes"
@@ -419,7 +409,7 @@
                 <label class="col-sm-5 col-form-label font-weight-bold"
                   >Bono:</label
                 >
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                   <input
                     disabled
                     type="number"
@@ -484,11 +474,18 @@
                 <strong>Días faltantes:</strong>
                 {{ personalInfo.dias_Faltantes }}
               </p>
-              <p><strong>Bono:</strong> {{ personalInfo.bono }}</p>
+              <p>
+                @if(personalInfo.bonoNombre !=null){
+                <strong>Bono:</strong> ({{ personalInfo.bonoNombre }}) ${{
+                  personalInfo.bono
+                }}
+                } @else {
+                <strong>Bono:</strong> $0 }
+              </p>
             </div>
 
             <!-- Tercera columna -->
-            <div class="col-6 col-md-4 mb-3 mt-1 pt-2">
+            <div class="col-7 col-md-4 mb-3 mt-1 pt-2">
               @if(personalInfo.ine==null){
               <p class="mb-5 pb-1"><strong>INE:</strong> Aún no registrado</p>
               <p>

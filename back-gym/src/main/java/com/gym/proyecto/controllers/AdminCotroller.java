@@ -23,13 +23,11 @@ import com.gym.proyecto.models.EstadoPersonalModel;
 import com.gym.proyecto.models.HorarioModel;
 import com.gym.proyecto.models.JornadaModel;
 import com.gym.proyecto.models.PersonalModel;
-import com.gym.proyecto.models.RolPersonalModel;
 import com.gym.proyecto.services.AdminService;
 import com.gym.proyecto.services.EstadoPersonalService;
 import com.gym.proyecto.services.HorarioService;
 import com.gym.proyecto.services.JornadaService;
 import com.gym.proyecto.services.PersonalService;
-import com.gym.proyecto.services.RolPersonalService;
 import com.gym.proyecto.utilidades.ResponseJson;
 
 import jakarta.validation.Valid;
@@ -44,8 +42,6 @@ public class AdminCotroller {
     @Autowired
     private PersonalService personalService;
 
-    @Autowired
-    private RolPersonalService rolPersonalService;
 
     @Autowired
     private EstadoPersonalService estadosPersonalService;
@@ -71,8 +67,8 @@ public class AdminCotroller {
     public ResponseEntity<?> personalFound(@PathVariable("id") Long id) {
         PersonalModel personal = this.personalService.buscarPorId(id);
         if (personal != null) {
-            RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(personal.getId());
-            if (rol.getRolId().getId() != 1) {
+            // Evita que se muestre el Administrador
+            if (personal.getRolPersonal().getRolId().getId() != 1) {
                 return ResponseEntity.ok(this.adminService.personalFound(personal));
             } else {
                 return ResponseJson.generateResponse(HttpStatus.UNAUTHORIZED,
@@ -114,26 +110,30 @@ public class AdminCotroller {
                 return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El INE debe ser de tipo PDF.");
             }
         }
+        // Verifica si existe el personal
         if (personalUpdate == null) {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontró al usuario");
         }
 
-        RolPersonalModel rol = this.rolPersonalService.buscarPersonalId(personalUpdate.getId());
-        if (rol.getRolId().getId() == 1) {
+        // Verifica que no se pueda modificar al Administrador
+        if (personalUpdate.getRolPersonal().getRolId().getId() == 1) {
             return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST,
                     "No tienes permisos para actualizar este usuario");
         }
 
+        // Verifica que el correo no sea modificado o no este registrado por otro
+        // usuario
         if (correo != null && !correo.getId().equals(id)) {
             return ResponseJson.generateResponse(HttpStatus.BAD_REQUEST, "El correo ya está registrado");
         }
+        // Actualiza el personal
         this.adminService.personalUpdate(request, personalUpdate.getId(), foto, ine);
         return ResponseJson.generateResponse(HttpStatus.OK, "Se actualizó correctamente al usuario");
     }
 
     // Eliminar personal
     @DeleteMapping("/personal/{id}")
-    public ResponseEntity<?> deletePersonal(@PathVariable("id") Long id) {
+    public ResponseEntity<?> eliminarPersonal(@PathVariable("id") Long id) {
         PersonalModel personal = this.personalService.buscarPorId(id);
 
         if (personal == null) {
@@ -173,6 +173,7 @@ public class AdminCotroller {
         }
     }
 
+    // Obtiene el ine
     @GetMapping("/personal/ine/{id}")
     public ResponseEntity<?> getInePersonal(@PathVariable("id") Long id) {
 
@@ -190,7 +191,7 @@ public class AdminCotroller {
             if (!pdf.exists()) {
                 return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encontro el ine");
             }
-
+            // Devuelve archivo del tipo pdf con APPLICATION_PDF
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(pdf);
@@ -213,7 +214,7 @@ public class AdminCotroller {
         return ResponseEntity.ok(estados);
     }
 
-    // Buscar Estado
+    // Buscar Estado por id
     @GetMapping("/personal/estados/{id}")
 
     public ResponseEntity<?> estadosFound(@Valid @PathVariable("id") Integer id) {
@@ -222,33 +223,29 @@ public class AdminCotroller {
         if (estado == null) {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron los estados");
         }
-
         return ResponseEntity.ok(estado);
     }
 
     // Obtener horarios
     @GetMapping("/personal/horarios")
-
     public ResponseEntity<?> horariosList() {
         List<HorarioModel> horarios = this.horarioService.listar();
 
         if (horarios == null) {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron los horarios");
         }
-
         return ResponseEntity.ok(horarios);
     }
 
     // Obtener jornadas
     @GetMapping("/personal/jornadas")
-
     public ResponseEntity<?> jornadasList() {
+
         List<JornadaModel> jornadas = this.jornadaService.listar();
 
         if (jornadas == null) {
             return ResponseJson.generateResponse(HttpStatus.NOT_FOUND, "No se encotraron las jornadas de trabajo");
         }
-
         return ResponseEntity.ok(jornadas);
     }
 

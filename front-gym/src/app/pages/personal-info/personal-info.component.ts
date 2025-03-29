@@ -63,8 +63,6 @@ export class PersonalInfoComponent implements OnInit {
     this.getFoto();
   }
 
-
-
   confirmarConstrasenas(): boolean {
     return (
       this.personalInfo.password !== '' &&
@@ -101,7 +99,7 @@ export class PersonalInfoComponent implements OnInit {
       this.imagen = reader.result;
     }, false);
 
-    if (archivo) {
+    if (archivo != null) {
       reader.readAsDataURL(archivo);
     }
   }
@@ -112,7 +110,6 @@ export class PersonalInfoComponent implements OnInit {
         this.createImageFromBlob(data);
       }, error(error) {
         console.log("no se encontro foto");
-        console.log(error);
       }
     });
   }
@@ -131,6 +128,7 @@ export class PersonalInfoComponent implements OnInit {
   getPersonalInfo() {
     this.personalService.getPersonalId(this.authService.getToken(), this.id).subscribe({
       next: data => {
+        console.log(data);
         this.personalInfo = data;
       }, error(error) {
         swal.fire({
@@ -139,7 +137,7 @@ export class PersonalInfoComponent implements OnInit {
         });
         setInterval(() => {
           window.location.href = "/";
-        }, 500);
+        }, 600);
       }
     });
   }

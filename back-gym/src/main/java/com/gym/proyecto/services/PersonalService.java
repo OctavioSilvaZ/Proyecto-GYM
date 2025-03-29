@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import com.gym.proyecto.models.BonosModel;
 import com.gym.proyecto.models.PersonalModel;
 import com.gym.proyecto.repositorys.PersonalRepository;
 
@@ -28,11 +30,16 @@ public class PersonalService {
     @Autowired
     private RolPersonalService rolPersonalService;
 
+    @Autowired
+    private BonosService bonosService;
+
+
+
     public List<PersonalModel> listar() {
         return this.repository.findAll();
     }
 
-    public void guardarIMG(MultipartFile file, int tipo, String nombre) throws IOException {
+    public void guardarArchivo(MultipartFile file, int tipo, String nombre) throws IOException {
         try {
             // Foto
             if (tipo == 0) {
@@ -69,12 +76,20 @@ public class PersonalService {
 
     @Transactional
     public void eliminarPorID(long id) {
-        this.rolPersonalService.eliminarPorPersonalId(id);
         this.repository.deleteById(id);
     }
 
     public PersonalModel buscarPorCorreo(String correo) {
         return this.repository.findByCorreo(correo).orElse(null);
+    }
+
+    public void asignarBonoPersonal(long idBono) {
+        BonosModel bono = this.bonosService.buscarporId(idBono);
+        if (bono == null) {
+            throw new RuntimeException("No se encontró el bono");
+        }
+        
+        this.repository.asignarBonoPersonal(bono.getId());
     }
 
 }

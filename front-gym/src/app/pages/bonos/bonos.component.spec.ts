@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MontosComponent } from './montos.component';
+import { BonosComponent } from './bonos.component';
 
-describe('MontosComponent', () => {
-  let component: MontosComponent;
-  let fixture: ComponentFixture<MontosComponent>;
+describe('BonosComponent', () => {
+  let component: BonosComponent;
+  let fixture: ComponentFixture<BonosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MontosComponent]
+      imports: [BonosComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MontosComponent);
+    fixture = TestBed.createComponent(BonosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
